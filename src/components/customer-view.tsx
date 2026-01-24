@@ -16,6 +16,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import SessionTimer from './session-timer';
 
 export default function CustomerView({ tableId }: { tableId: string | null }) {
   const { clearCart, addToCart } = useCart();
@@ -70,8 +71,12 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
         </Accordion>
       </main>
       <CartSheet isOpen={isCartOpen} onOpenChange={setCartOpen} tableId={tableId} />
-      {/* Floating Cart Button for mobile */}
-      <div className="fixed bottom-6 right-6 md:hidden">
+      
+      {/* Floating elements for mobile */}
+      <div className="fixed bottom-6 left-6 z-50 md:hidden">
+        <SessionTimer />
+      </div>
+      <div className="fixed bottom-6 right-6 z-50 md:hidden">
           <CartIcon onOpen={() => setCartOpen(true)} />
       </div>
     </>

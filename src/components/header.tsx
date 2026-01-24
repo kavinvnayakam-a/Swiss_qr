@@ -1,5 +1,6 @@
 "use client"
 import { CartIcon } from "@/components/cart-icon";
+import SessionTimer from "@/components/session-timer";
 
 type HeaderProps = {
   tableId: string | null;
@@ -15,9 +16,12 @@ export function Header({ tableId, onCartClick }: HeaderProps) {
         </div>
         <div className="flex items-center gap-4">
           {tableId && (
-            <div className="hidden sm:flex items-center gap-2 rounded-md border-2 border-foreground bg-card px-3 py-1.5 text-foreground shadow-[2px_2px_0px_#000]">
-              <span className="text-sm">TABLE</span>
-              <span className="text-lg">{tableId}</span>
+            <div className="hidden sm:flex items-center gap-4">
+              <SessionTimer />
+              <div className="flex items-center gap-2 rounded-md border-2 border-foreground bg-card px-3 py-1.5 text-foreground shadow-[2px_2px_0px_#000]">
+                <span className="text-sm">TABLE</span>
+                <span className="text-lg">{tableId}</span>
+              </div>
             </div>
           )}
           <div className="hidden md:block">
