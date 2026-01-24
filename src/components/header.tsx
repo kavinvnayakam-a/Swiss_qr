@@ -24,8 +24,13 @@ export function Header({ tableId, onCartClick, timeLeft }: HeaderProps) {
                   <span className="text-lg">{tableId}</span>
               </div>
               {/* Desktop timer and table ID */}
-              <div className="hidden sm:flex items-start gap-4">
-                  <SessionTimer timeLeft={timeLeft} />
+              <div className="hidden sm:flex items-center gap-4">
+                  <div className="flex items-center gap-3">
+                      <SessionTimer timeLeft={timeLeft} />
+                      <p className="text-xs text-muted-foreground max-w-40">
+                        Order within 10mins as the session will be cleared post 10mins.
+                      </p>
+                  </div>
                   <div className="flex items-center gap-2 rounded-md border-2 border-foreground bg-card px-3 py-1.5 text-foreground shadow-[2px_2px_0px_#000]">
                       <span className="text-sm">TABLE</span>
                       <span className="text-lg">{tableId}</span>

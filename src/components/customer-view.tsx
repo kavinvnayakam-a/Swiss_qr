@@ -72,7 +72,12 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
       
       {/* Floating elements for mobile */}
       <div className="fixed bottom-6 left-6 z-50 md:hidden">
-        <SessionTimer timeLeft={timeLeft} />
+        <div className="p-3 text-center rounded-lg border-2 border-foreground bg-card text-card-foreground shadow-[4px_4px_0px_#000]">
+          <SessionTimer timeLeft={timeLeft} />
+          <p className="text-xs mt-2 text-muted-foreground max-w-48 mx-auto">
+            Order within 10mins as the session will be cleared post 10mins.
+          </p>
+        </div>
       </div>
       <div className="fixed bottom-6 right-6 z-50 md:hidden">
           <CartIcon onOpen={() => setCartOpen(true)} />
