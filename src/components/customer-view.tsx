@@ -22,9 +22,7 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
   const { clearCart, addToCart } = useCart();
   const [isCartOpen, setCartOpen] = useState(false);
 
-  useSessionTimer(() => {
-    clearCart();
-  });
+  const { timeLeft } = useSessionTimer(clearCart);
 
   const categorizedMenu = useMemo(() => {
     const categoryOrder = ['Wraps', 'Shawarma', 'Kebabs & Falafel', 'Lebanese Grill', 'Broasted Chicken', 'Broast Platters', 'Platters', 'Salads', 'Burgers', 'Fries', 'Sides', 'Drinks'];
@@ -51,7 +49,7 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
 
   return (
     <>
-      <Header tableId={tableId} onCartClick={() => setCartOpen(true)} />
+      <Header tableId={tableId} onCartClick={() => setCartOpen(true)} timeLeft={timeLeft} />
       <main className="container mx-auto px-4 md:px-6 py-12">
         <Accordion type="multiple" className="w-full space-y-8">
           {categorizedMenu.map(({ category, items }) => (
@@ -74,7 +72,7 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
       
       {/* Floating elements for mobile */}
       <div className="fixed bottom-6 left-6 z-50 md:hidden">
-        <SessionTimer />
+        <SessionTimer timeLeft={timeLeft} />
       </div>
       <div className="fixed bottom-6 right-6 z-50 md:hidden">
           <CartIcon onOpen={() => setCartOpen(true)} />

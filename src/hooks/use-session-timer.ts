@@ -1,52 +1,46 @@
 "use client"
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 
+const SESSION_DURATION_MS = 10 * 60 * 1000; // 10 minutes
+
 export const useSessionTimer = (
-  onIdle: () => void,
-  timeoutInMs: number = 900000 // 15 minutes
+  onTimeout: () => void,
 ) => {
   const { toast } = useToast();
+  const [timeLeft, setTimeLeft] = useState(SESSION_DURATION_MS);
   const timeoutId = useRef<NodeJS.Timeout>();
 
-  const resetTimer = useCallback(() => {
-    if (timeoutId.current) {
-      clearTimeout(timeoutId.current);
-    }
-    
+  useEffect(() => {
+    const sessionEndTime = Date.now() + SESSION_DURATION_MS;
+
+    const intervalId = setInterval(() => {
+        const remaining = sessionEndTime - Date.now();
+        setTimeLeft(remaining > 0 ? remaining : 0);
+    }, 1000);
+
     timeoutId.current = setTimeout(() => {
       toast({
         title: "Session Expired",
-        description: "Your cart has been cleared due to inactivity. The page will now refresh.",
+        description: "Your 10-minute session has ended. Your cart has been cleared.",
         variant: "destructive",
         duration: 5000,
       });
-      // Call the idle callback and then refresh
-      onIdle();
+      onTimeout();
       setTimeout(() => {
-        window.location.reload();
+        window.location.href = '/';
       }, 5000);
-    }, timeoutInMs);
-  }, [timeoutInMs, onIdle, toast]);
-
-  useEffect(() => {
-    const events: (keyof WindowEventMap)[] = ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'];
-    
-    const handleActivity = () => {
-      resetTimer();
-    };
-
-    events.forEach(event => window.addEventListener(event, handleActivity, { passive: true }));
-    resetTimer(); // Start the timer on mount
+    }, SESSION_DURATION_MS);
 
     return () => {
-      events.forEach(event => window.removeEventListener(event, handleActivity));
-      if (timeoutId.current) {
-        clearTimeout(timeoutId.current);
-      }
+        clearInterval(intervalId);
+        if (timeoutId.current) {
+            clearTimeout(timeoutId.current);
+        }
     };
-  }, [resetTimer]);
 
-  return { resetTimer };
+  }, [onTimeout, toast]);
+
+  return { timeLeft };
 };

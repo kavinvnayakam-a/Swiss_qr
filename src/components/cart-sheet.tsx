@@ -8,7 +8,7 @@ import type { Order } from "@/lib/types";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
-import { Minus, Plus, Trash2, X } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 
 type CartSheetProps = {
   isOpen: boolean;
@@ -42,7 +42,7 @@ export function CartSheet({ isOpen, onOpenChange, tableId }: CartSheetProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="flex flex-col bg-card border-l-4 border-foreground text-foreground w-full sm:max-w-md">
-        <SheetHeader className="pr-10">
+        <SheetHeader>
           <SheetTitle className="text-2xl text-foreground">Your Order</SheetTitle>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto -mx-6 px-6">
@@ -84,10 +84,6 @@ export function CartSheet({ isOpen, onOpenChange, tableId }: CartSheetProps) {
             </div>
           </SheetFooter>
         )}
-         <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-          <X className="h-6 w-6" />
-          <span className="sr-only">Close</span>
-        </SheetClose>
       </SheetContent>
     </Sheet>
   );
