@@ -101,6 +101,66 @@
       "description": "A side of grilled chicken.",
       "imageUrl": "https://images.unsplash.com/photo-1598515213692-5f284240dfa0?w=600&q=80",
       "imageHint": "grilled chicken"
+    },
+    {
+      "id": "chicken-broast-platter-1",
+      "description": "A platter with 4 crispy fried chicken, 3 crispy strips, and fries.",
+      "imageUrl": "https://images.unsplash.com/photo-1626082902029-27038c35314a?w=600&q=80",
+      "imageHint": "chicken platter"
+    },
+    {
+      "id": "chicken-broast-platter-2",
+      "description": "A platter with 8 crispy fried chicken, 2 crispy fried fish, and fries.",
+      "imageUrl": "https://images.unsplash.com/photo-1562967915-92ae0c320a01?w=600&q=80",
+      "imageHint": "fish platter"
+    },
+    {
+      "id": "chicken-broast-platter-3",
+      "description": "A combo platter with chicken, popcorn, nuggets, fries, and drinks.",
+      "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80",
+      "imageHint": "combo platter"
+    },
+    {
+      "id": "falafel-platter",
+      "description": "A platter with falafel, french fries, salad, sauces, and bread.",
+      "imageUrl": "https://images.unsplash.com/photo-1627898018534-31e7e4a1ef96?w=600&q=80",
+      "imageHint": "falafel platter"
+    },
+    {
+      "id": "kebab-platter",
+      "description": "A platter with chicken kebab, french fries, salad, sauces, and bread.",
+      "imageUrl": "https://images.unsplash.com/photo-1603203929429-4170e5b1ad95?w=600&q=80",
+      "imageHint": "kebab platter"
+    },
+    {
+      "id": "istanbul-special-platter",
+      "description": "A special platter with chicken, fries, rice, falafel, salad, bread and a soft drink.",
+      "imageUrl": "https://images.unsplash.com/photo-1628216335129-a038b308678d?w=600&q=80",
+      "imageHint": "turkish platter"
+    },
+    {
+      "id": "veg-salad",
+      "description": "A fresh vegetable salad with various greens and sauces.",
+      "imageUrl": "https://images.unsplash.com/photo-1551248429-434754a5c632?w=600&q=80",
+      "imageHint": "vegetable salad"
+    },
+    {
+      "id": "paneer-salad",
+      "description": "A fresh salad with grilled paneer cubes.",
+      "imageUrl": "https://images.unsplash.com/photo-1563865428-c98a63589b25?w=600&q=80",
+      "imageHint": "paneer salad"
+    },
+    {
+      "id": "falafel-salad",
+      "description": "A fresh salad topped with crispy falafel.",
+      "imageUrl": "https://images.unsplash.com/photo-1547496614-54c41c7b8979?w=600&q=80",
+      "imageHint": "falafel salad"
+    },
+    {
+      "id": "chicken-salad",
+      "description": "A healthy salad with grilled chicken pieces.",
+      "imageUrl": "https://images.unsplash.com/photo-1551248429-434754a5c632?w=600&q=80",
+      "imageHint": "chicken salad"
     }
   ]
 }

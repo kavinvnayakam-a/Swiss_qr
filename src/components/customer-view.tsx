@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useSessionTimer } from '@/hooks/use-session-timer';
 import { useCart } from '@/hooks/use-cart';
 import { menuItems } from '@/lib/menu-data';
@@ -9,6 +9,7 @@ import { MenuItemCard } from '@/components/menu-item-card';
 import { CartSheet } from '@/components/cart-sheet';
 import { CartIcon } from '@/components/cart-icon';
 import TableSelection from './table-selection';
+import type { MenuItem } from '@/lib/types';
 
 export default function CustomerView({ tableId }: { tableId: string | null }) {
   const { clearCart, addToCart } = useCart();
@@ -18,6 +19,25 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
     clearCart();
   });
 
+  const categorizedMenu = useMemo(() => {
+    const categoryOrder = ['Broast Platters', 'Platters', 'Salads', 'Burgers', 'Fries', 'Sides', 'Drinks'];
+    
+    const grouped = menuItems.reduce((acc, item) => {
+      const category = item.category;
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(item);
+      return acc;
+    }, {} as Record<string, MenuItem[]>);
+
+    return categoryOrder.map(category => ({
+      category,
+      items: grouped[category] || []
+    })).filter(group => group.items.length > 0);
+
+  }, []);
+
   if (!tableId) {
     return <TableSelection />;
   }
@@ -26,9 +46,16 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
     <>
       <Header tableId={tableId} onCartClick={() => setCartOpen(true)} />
       <main className="container mx-auto px-4 md:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-          {menuItems.map((item) => (
-            <MenuItemCard key={item.id} item={item} onAddToCart={addToCart} />
+        <div className="space-y-16">
+          {categorizedMenu.map(({ category, items }) => (
+            <div key={category}>
+              <h2 className="text-4xl font-extrabold text-foreground mb-8 border-b-4 border-foreground pb-2">{category}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                {items.map((item) => (
+                  <MenuItemCard key={item.id} item={item} onAddToCart={addToCart} />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </main>
