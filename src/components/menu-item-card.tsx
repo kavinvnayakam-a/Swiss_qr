@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { MenuItem } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ImageIcon } from "lucide-react";
 
 type MenuItemCardProps = {
   item: MenuItem;
@@ -16,14 +17,20 @@ export function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
     <div className="group bg-white rounded-[2.5rem] border-2 border-zinc-900/5 overflow-hidden transition-all active:scale-[0.98] shadow-md hover:shadow-2xl">
       
       {/* Image Container */}
-      <div className="relative h-60 w-full overflow-hidden">
-        <Image
-          src={item.image}
-          alt={item.name}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+      <div className="relative h-60 w-full overflow-hidden bg-zinc-100">
+        {item.image ? (
+          <Image
+            src={item.image}
+            alt={item.name}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <ImageIcon className="h-16 w-16 text-zinc-300" />
+          </div>
+        )}
       </div>
 
       <div className="p-6">
