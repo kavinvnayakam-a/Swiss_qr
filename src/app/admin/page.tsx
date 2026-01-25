@@ -23,8 +23,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const q = query(
       collection(db, "orders"), 
-      where("tableId", "==", "Takeaway"),
-      where("status", "!=", "Completed")
+      where("tableId", "==", "Takeaway")
     );
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
