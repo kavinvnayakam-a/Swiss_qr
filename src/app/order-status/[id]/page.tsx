@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { db } from '@/firebase/config';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useRouter, useParams } from 'next/navigation';
-import { ChefHat, CheckCircle2, Timer, Zap, Play, Clock } from 'lucide-react';
+import { ChefHat, CheckCircle2, Timer, Zap, Play, Clock, Hash, Utensils } from 'lucide-react';
 
 interface GrillPipe {
   x: number;
@@ -17,52 +17,94 @@ export default function OrderStatusPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
+
+  // UI & Game State
   const [status, setStatus] = useState('Pending');
   const [orderData, setOrderData] = useState<any>(null);
   const [score, setScore] = useState(0);
   const [gameActive, setGameActive] = useState(false);
   const [isGrilled, setIsGrilled] = useState(false);
+  
+  // Timer State
   const [timeLeft, setTimeLeft] = useState(180); 
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // --- 1. PREVENT BACK NAVIGATION ---
+  // --- 1. GLOBAL REFRESH & BACK NAVIGATION LOCK ---
   useEffect(() => {
     window.history.pushState(null, "", window.location.href);
-    const handlePopState = () => {
-      window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => window.history.pushState(null, "", window.location.href);
+    
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "Warning: Refreshing will reset your game score!";
     };
+
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
-  // --- 2. FIREBASE LISTENER ---
+  // --- 2. FIREBASE REAL-TIME SYNC ---
   useEffect(() => {
     if (!id) return;
-    const unsub = onSnapshot(doc(db, "orders", id), (doc) => {
-      if (doc.exists()) {
-        const data = doc.data();
+    const unsub = onSnapshot(doc(db, "orders", id), (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const data = docSnapshot.data();
         setStatus(data.status);
         setOrderData(data);
-        if (data.status === 'Served') router.push('/thanks'); 
+        
+        // Trigger persistent timer only when status hits "Ready"
+        if (data.status === 'Ready') {
+          setIsTimerRunning(true);
+        }
+
+        // Cleanup and redirect if Admin completes the order
+        if (data.status === 'Served') {
+          localStorage.removeItem(`grill_timer_${id}`);
+          router.push('/thanks'); 
+        }
       }
     });
     return () => unsub();
   }, [id, router]);
 
-  // --- 3. AUTO-REDIRECT TIMER ---
+  // --- 3. REFRESH-PROOF PERSISTENT TIMER ---
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (status === 'Ready' && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    } else if (status === 'Ready' && timeLeft === 0) {
-      router.push('/thanks');
-    }
-    return () => clearInterval(timer);
-  }, [status, timeLeft, router]);
+    if (!isTimerRunning || !id) return;
 
-  // --- 4. FULL-SCREEN CHICKEN GAME LOGIC ---
+    const timerKey = `grill_timer_${id}`;
+    let savedEndTime = localStorage.getItem(timerKey);
+
+    // If no record exists, this is the FIRST time it's running: set end time to +3 mins
+    if (!savedEndTime) {
+      const newEndTime = (Date.now() + 180000).toString();
+      localStorage.setItem(timerKey, newEndTime);
+      savedEndTime = newEndTime;
+    }
+
+    const timerInterval = setInterval(() => {
+      const now = Date.now();
+      const end = parseInt(savedEndTime!);
+      const remaining = Math.max(0, Math.floor((end - now) / 1000));
+      
+      setTimeLeft(remaining);
+
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        localStorage.removeItem(timerKey);
+        router.push('/thanks');
+      }
+    }, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, [isTimerRunning, id, router]);
+
+  // --- 4. FLAPPY CHICKEN GAME LOGIC ---
   useEffect(() => {
     if (!gameActive || !canvasRef.current) return;
     const canvas = canvasRef.current;
@@ -152,22 +194,27 @@ export default function OrderStatusPage() {
     <div className="fixed inset-0 bg-zinc-900 font-sans overflow-hidden touch-none">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-      {/* --- DYNAMIC STATUS BAR --- */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50">
-        <div className="bg-zinc-900/90 backdrop-blur-md border-4 border-zinc-900 rounded-[2rem] p-4 shadow-2xl">
-          <div className="flex justify-between items-center mb-3 px-2">
-            <div className="flex items-center gap-2">
-              <Zap className="text-[#d4af37]" size={14} />
-              <span className="text-[10px] font-black text-white uppercase tracking-widest leading-none">
-                {orderData?.tableId === 'Takeaway' ? 'Collection' : `Table ${orderData?.tableId}`}
-              </span>
-            </div>
-            <span className="text-[10px] font-black text-[#d4af37] uppercase tracking-widest leading-none">
-               #{orderData?.orderNumber || '0000'}
-            </span>
+      {/* --- HEADER: ORDER & TABLE INFO --- */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50 flex flex-col gap-4">
+        
+        <div className="flex gap-2 animate-in slide-in-from-top duration-500">
+          <div className="flex-1 bg-white border-4 border-zinc-900 rounded-[1.5rem] p-4 flex flex-col items-center justify-center shadow-[4px_4px_0_0_#d4af37]">
+            <p className="text-[10px] font-black uppercase text-zinc-400 leading-none mb-1">Table</p>
+            <p className="text-3xl font-black italic text-zinc-900 leading-none">
+              {orderData?.tableId === 'Takeaway' ? 'TK' : orderData?.tableId}
+            </p>
           </div>
+          <div className="flex-[2] bg-zinc-900 border-4 border-[#d4af37] rounded-[1.5rem] p-4 flex flex-col items-center justify-center shadow-[4px_4px_0_0_#000]">
+            <p className="text-[10px] font-black uppercase text-[#d4af37]/50 leading-none mb-1 text-center">Order Number</p>
+            <p className="text-3xl font-black italic text-[#d4af37] leading-none tracking-tighter">
+              #{orderData?.orderNumber || '0000'}
+            </p>
+          </div>
+        </div>
 
-          <div className="relative h-12 w-full bg-zinc-800 rounded-2xl overflow-hidden flex items-center">
+        {/* PROGRESS BAR SECTION */}
+        <div className="bg-zinc-900/90 backdrop-blur-md border-4 border-zinc-900 rounded-[2.5rem] p-4 shadow-2xl">
+          <div className="relative h-14 w-full bg-zinc-800 rounded-2xl overflow-hidden flex items-center border-2 border-zinc-700">
             <div 
               className={`h-full transition-all duration-1000 ${
                 status === 'Pending' ? 'bg-rose-500' : status === 'Received' ? 'bg-[#d4af37]' : 'bg-emerald-500'
@@ -176,11 +223,11 @@ export default function OrderStatusPage() {
             />
             <div className="absolute inset-0 flex items-center justify-center gap-3">
               <span className="text-white">
-                {status === 'Pending' ? <Timer className="animate-spin" size={16}/> : 
-                 status === 'Received' ? <ChefHat className="animate-bounce" size={16}/> : 
-                 <CheckCircle2 size={16}/>}
+                {status === 'Pending' ? <Timer className="animate-spin" size={20}/> : 
+                 status === 'Received' ? <ChefHat className="animate-bounce" size={20}/> : 
+                 <CheckCircle2 size={20}/>}
               </span>
-              <span className="text-xs font-black uppercase italic text-white drop-shadow-md">
+              <span className="text-sm font-black uppercase italic text-white drop-shadow-md">
                 {status === 'Pending' ? 'Waiting Approval' : 
                  status === 'Received' ? 'Kitchen Grilling' : 
                  'FOOD READY!'}
@@ -188,48 +235,56 @@ export default function OrderStatusPage() {
             </div>
           </div>
 
+          {/* TIMER HUD - PERSISTENT THROUGH REFRESH */}
           {status === 'Ready' && (
             <div className="mt-3 flex items-center justify-center gap-2 bg-emerald-500/10 py-2 rounded-xl border border-emerald-500/20 animate-pulse">
                <Clock size={14} className="text-emerald-500"/>
-               <span className="text-[10px] font-black text-emerald-500 uppercase">
-                 Auto-closing in {formatTime(timeLeft)}
+               <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">
+                 Auto-close in {formatTime(timeLeft)}
                </span>
             </div>
           )}
         </div>
       </div>
 
-      {/* --- OVERLAY: START / GAME OVER --- */}
+      {/* --- GAME OVERLAY --- */}
       {!gameActive && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm p-8">
-          <div className="bg-white border-8 border-zinc-900 p-8 rounded-[3.5rem] shadow-[15px_15px_0_0_#d4af37] text-center space-y-6 max-w-sm animate-in zoom-in-95 duration-300">
-            {isGrilled ? <div className="text-7xl">🍗</div> : <div className="text-7xl animate-bounce">🐔</div>}
+          <div className="bg-white border-8 border-zinc-900 p-8 rounded-[4rem] shadow-[15px_15px_0_0_#d4af37] text-center space-y-6 max-w-sm animate-in zoom-in-95 duration-300">
+            {isGrilled ? <div className="text-8xl">🍗</div> : <div className="text-8xl animate-bounce">🐔</div>}
             
-            <div>
-              {/* REMOVED ROAST MESSAGE - JUST SHOWS GAME NAME */}
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter leading-none">
+            <div className="space-y-2">
+              <h2 className="text-5xl font-black uppercase italic tracking-tighter leading-none text-zinc-900">
                 GRILL HOP
               </h2>
-              <p className="text-zinc-400 font-bold uppercase text-[9px] mt-2 tracking-widest leading-relaxed">
-                {orderData?.tableId === 'Takeaway' ? `Takeaway Order #${orderData?.orderNumber}` : `Table ${orderData?.tableId} • Order #${orderData?.orderNumber}`}
-              </p>
+              <div className="flex items-center justify-center gap-2 bg-zinc-100 py-2 px-4 rounded-2xl border-2 border-zinc-200">
+                <Hash size={14} className="text-[#d4af37]"/>
+                <p className="text-zinc-900 font-black uppercase text-xl italic leading-none">
+                  {orderData?.orderNumber}
+                </p>
+                <div className="w-1 h-4 bg-zinc-300 mx-1" />
+                <Utensils size={14} className="text-[#d4af37]"/>
+                <p className="text-zinc-900 font-black uppercase text-xl italic leading-none">
+                  T-{orderData?.tableId}
+                </p>
+              </div>
             </div>
             
             <button 
               onClick={() => { setScore(0); setGameActive(true); setIsGrilled(false); }}
-              className="w-full bg-[#d4af37] text-zinc-900 py-5 rounded-2xl font-black uppercase italic text-lg shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all"
+              className="w-full bg-[#d4af37] text-zinc-900 py-6 rounded-3xl font-black uppercase italic text-2xl shadow-[0_8px_0_0_#b3922d] active:shadow-none active:translate-y-1 transition-all flex items-center justify-center gap-3"
             >
-              <Play fill="currentColor" size={18} /> {isGrilled ? "TRY AGAIN" : "START GAME"}
+              <Play fill="currentColor" size={24} /> {isGrilled ? "TRY AGAIN" : "PLAY NOW"}
             </button>
           </div>
         </div>
       )}
 
-      {/* --- SCORE HUD --- */}
+      {/* --- LIVE SCORE --- */}
       {gameActive && (
-        <div className="absolute bottom-10 left-10 z-50 flex items-baseline gap-2 pointer-events-none">
-          <span className="text-7xl font-black italic text-[#d4af37] drop-shadow-[4px_4px_0_#000]">{score}</span>
-          <span className="text-[10px] font-black text-white uppercase tracking-widest">Points</span>
+        <div className="absolute bottom-10 left-10 z-50 flex items-baseline gap-2 pointer-events-none bg-black/40 p-4 rounded-3xl backdrop-blur-sm border border-white/10">
+          <span className="text-7xl font-black italic text-[#d4af37] drop-shadow-[4px_4px_0_#000] leading-none">{score}</span>
+          <span className="text-xs font-black text-white uppercase tracking-widest">Points</span>
         </div>
       )}
     </div>
