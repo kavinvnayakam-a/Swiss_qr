@@ -208,18 +208,18 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
         </Accordion>
       </main>
 
-      <footer className="mt-20 bg-zinc-900 text-white py-12 px-6 border-t-4 border-white">
+      <footer className="mt-20 bg-[#d4af37] text-zinc-900 py-12 px-6 border-t-4 border-zinc-900">
         <div className="container mx-auto flex flex-col items-center gap-6">
-          <Image src="https://firebasestorage.googleapis.com/v0/b/grillicious-backend.firebasestorage.app/o/Grillicious-logo.webp?alt=media&token=efbfa1e4-5a67-417f-aff0-bef82099852a" alt="Grillicious Logo" width={180} height={45} />
-          <div className="h-px w-16 bg-zinc-800" />
+          <Image src="https://firebasestorage.googleapis.com/v0/b/grillicious-backend.firebasestorage.app/o/Grillicious-logo.webp?alt=media&token=efbfa1e4-5a67-417f-aff0-bef82099852a" alt="Grillicious Logo" width={180} height={45} className="filter invert(1)" />
+          <div className="h-px w-16 bg-zinc-900" />
           <Link href="https://www.getpik.in/" target="_blank" className="group flex flex-col items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-500">Designed By</span>
-            <div className="flex items-center gap-2 bg-white px-5 py-2 rounded-2xl border-2 border-[#d4af37] shadow-[4px_4px_0_0_#d4af37]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-800">Designed By</span>
+            <div className="flex items-center gap-2 bg-white px-5 py-2 rounded-2xl border-2 border-zinc-900 shadow-[4px_4px_0_0_#18181b]">
               <span className="text-zinc-900 font-black text-xl tracking-tight">GetPik</span>
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
           </Link>
-          <p className="text-[9px] text-zinc-600 font-medium uppercase tracking-widest mt-4">© 2026 All Rights Reserved</p>
+          <p className="text-[9px] text-zinc-800 font-medium uppercase tracking-widest mt-4">© 2026 All Rights Reserved</p>
         </div>
       </footer>
 
