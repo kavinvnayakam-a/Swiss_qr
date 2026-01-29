@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import MenuManager from "@/components/admin/menu-manager"; 
 import OrderManager from "@/components/admin/order-manager"; 
 import AnalyticsDashboard from "@/components/admin/analytics-dashboard";
+import OrderHistory from "@/components/admin/order-history"; 
 import { db } from "@/firebase/config";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { 
@@ -12,11 +13,12 @@ import {
   BarChart3, 
   LogOut, 
   ShoppingBag,
-  Bell 
+  Bell,
+  Clock 
 } from "lucide-react";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'orders' | 'menu' | 'analytics'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'history' | 'menu' | 'analytics'>('orders');
   const [takeawayCount, setTakeawayCount] = useState(0);
 
   // Live listener for Takeaway order count to show in sidebar
@@ -61,6 +63,19 @@ export default function AdminDashboard() {
               <LayoutDashboard className="w-5 h-5" />
               <span className="hidden md:inline">Live Kitchen</span>
             </div>
+          </button>
+
+          {/* NEW: ORDER HISTORY BUTTON */}
+          <button 
+            onClick={() => setActiveTab('history')}
+            className={`flex items-center gap-4 p-4 rounded-2xl font-black uppercase italic transition-all border-2 ${
+              activeTab === 'history' 
+              ? 'bg-zinc-900 text-[#d4af37] border-zinc-900 shadow-[4px_4px_0_0_#000]' 
+              : 'text-zinc-900 border-transparent hover:bg-zinc-900/10'
+            }`}
+          >
+            <Clock className="w-5 h-5" />
+            <span className="hidden md:inline">Order History</span>
           </button>
 
           {/* Special Takeaway Indicator in Sidebar */}
@@ -120,10 +135,10 @@ export default function AdminDashboard() {
               <div className="md:hidden text-2xl font-black italic uppercase tracking-tighter">G.</div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-900/60">
-                  Storefront / {activeTab === 'orders' ? 'Orders' : activeTab === 'menu' ? 'Inventory' : 'Insights'}
+                  Storefront / {activeTab === 'orders' ? 'Orders' : activeTab === 'menu' ? 'Inventory' : activeTab === 'history' ? 'Archives' : 'Insights'}
                 </span>
                 <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-zinc-900 leading-none">
-                  {activeTab === 'orders' ? 'Kitchen View' : activeTab === 'menu' ? 'Menu Manager' : 'Performance'}
+                  {activeTab === 'orders' ? 'Kitchen View' : activeTab === 'menu' ? 'Menu Manager' : activeTab === 'history' ? 'Order History' : 'Performance'}
                 </h2>
               </div>
             </div>
@@ -133,10 +148,10 @@ export default function AdminDashboard() {
               {activeTab === 'orders' && (
                 <div className="flex gap-4 bg-zinc-900 text-[#d4af37] px-4 py-2 rounded-xl border-2 border-zinc-900 shadow-sm">
                   <div className="flex items-center gap-2 text-[9px] font-black uppercase">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Occupied
+                    <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" /> Occupied
                   </div>
                   <div className="flex items-center gap-2 text-[9px] font-black uppercase text-[#d4af37]/60">
-                    <div className="w-2 h-2 rounded-full bg-zinc-600" /> Available
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" /> Available
                   </div>
                 </div>
               )}
@@ -158,6 +173,12 @@ export default function AdminDashboard() {
           {activeTab === 'orders' && (
             <div className="animate-in fade-in slide-in-from-top-2 duration-500">
                <OrderManager />
+            </div>
+          )}
+
+          {activeTab === 'history' && (
+            <div className="animate-in fade-in slide-in-from-left-2 duration-500">
+              <OrderHistory />
             </div>
           )}
           
