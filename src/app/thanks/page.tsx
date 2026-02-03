@@ -19,13 +19,13 @@ export default function ThankYouPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#d4af37] flex flex-col items-center justify-center p-6 text-zinc-900 font-sans">
-      <div className="w-full max-w-md bg-white border-4 border-zinc-900 rounded-[3rem] p-8 shadow-[12px_12px_0px_0px_#18181b] text-center">
+    <div className="min-h-screen bg-[#e76876] flex flex-col items-center justify-center p-6 text-white font-sans">
+      <div className="w-full max-w-md bg-white border-4 border-zinc-900 rounded-[3rem] p-8 shadow-[12px_12px_0px_0px_#18181b] text-center text-zinc-900">
         
         {/* Magical Header */}
         <div className="mb-6 flex justify-center">
           <div className="bg-zinc-900 p-4 rounded-full animate-pulse">
-            <Heart className="h-8 w-8 text-[#d4af37] fill-[#d4af37]" />
+            <Heart className="h-8 w-8 text-[#e76876] fill-[#e76876]" />
           </div>
         </div>
 
@@ -36,7 +36,7 @@ export default function ThankYouPage() {
 
         <div className="space-y-4 mb-8">
           <h2 className="text-xl font-bold leading-tight">
-            The fire is out, but the <span className="italic underline decoration-[#d4af37] decoration-4">flavors linger.</span>
+            The fire is out, but the <span className="italic underline decoration-[#e76876] decoration-4">flavors linger.</span>
           </h2>
           <p className="text-sm font-medium text-zinc-600">
             Thank you for sharing your time and appetite with us. Your presence makes our grill sizzle brighter!
@@ -47,11 +47,11 @@ export default function ThankYouPage() {
         <Link 
           href="https://maps.app.goo.gl/a2fZ7znN8HuEmCsC6" 
           target="_blank"
-          className="block w-full bg-zinc-900 text-white p-6 rounded-2xl border-2 border-zinc-900 shadow-[4px_4px_0px_0px_#d4af37] active:translate-y-1 active:shadow-none transition-all mb-8 group"
+          className="block w-full bg-zinc-900 text-white p-6 rounded-2xl border-2 border-zinc-900 shadow-[4px_4px_0px_0px_#e76876] active:translate-y-1 active:shadow-none transition-all mb-8 group"
         >
           <div className="flex items-center justify-center gap-2 mb-1">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="h-4 w-4 fill-[#d4af37] text-[#d4af37]" />
+              <Star key={i} className="h-4 w-4 fill-[#e76876] text-[#e76876]" />
             ))}
           </div>
           <span className="font-black uppercase tracking-widest text-xs">Rate our Sizzle on Google</span>
@@ -59,13 +59,13 @@ export default function ThankYouPage() {
 
         {/* Social Icons */}
         <div className="flex justify-center gap-6 mb-10">
-          <Link href="https://www.instagram.com/eatgrillicious?igsh=MTJhd2E2MnZkZmlpeA==" className="p-3 bg-zinc-100 rounded-xl hover:bg-[#d4af37] transition-colors">
+          <Link href="https://www.instagram.com/eatgrillicious?igsh=MTJhd2E2MnZkZmlpeA==" className="p-3 bg-zinc-100 rounded-xl hover:bg-[#e76876] transition-colors">
             <Facebook className="h-6 w-6" />
           </Link>
-          <Link href="https://www.instagram.com/eatgrillicious?igsh=MTJhd2E2MnZkZmlpeA==" className="p-3 bg-zinc-100 rounded-xl hover:bg-[#d4af37] transition-colors">
+          <Link href="https://www.instagram.com/eatgrillicious?igsh=MTJhd2E2MnZkZmlpeA==" className="p-3 bg-zinc-100 rounded-xl hover:bg-[#e76876] transition-colors">
             <Instagram className="h-6 w-6" />
           </Link>
-          <Link href="" className="p-3 bg-zinc-100 rounded-xl hover:bg-[#d4af37] transition-colors">
+          <Link href="" className="p-3 bg-zinc-100 rounded-xl hover:bg-[#e76876] transition-colors">
             <MessageCircle className="h-6 w-6" />
           </Link>
         </div>
@@ -83,7 +83,7 @@ export default function ThankYouPage() {
       </div>
 
       <Link href="https://www.getpik.in/" target="_blank" className="group mt-8 flex flex-col items-center gap-2">
-        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-800">Designed By</span>
+        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/80">Designed By</span>
         <div className="flex items-center gap-2 bg-white px-5 py-2 rounded-2xl border-2 border-zinc-900 shadow-[4px_4px_0_0_#18181b]">
           <span className="text-zinc-900 font-black text-xl tracking-tight">GetPik</span>
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />

@@ -77,7 +77,7 @@ export default function AnalyticsDashboard() {
     <div className="space-y-8 pb-20 animate-in fade-in duration-500">
       
       {/* 0. DATE SELECTOR BAR */}
-      <div className="bg-[#d4af37] p-6 rounded-[2rem] border-4 border-zinc-900 shadow-[6px_6px_0_0_#000] flex flex-col md:flex-row justify-between items-center gap-4">
+      <div className="bg-[#e76876] p-6 rounded-[2rem] border-4 border-zinc-900 shadow-[6px_6px_0_0_#000] flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-3">
           <Calendar className="text-zinc-900" size={20} />
           <h3 className="font-black uppercase italic text-zinc-900">Analysis for:</h3>
@@ -103,7 +103,7 @@ export default function AnalyticsDashboard() {
         <div className="lg:col-span-2 bg-white border-4 border-zinc-900 rounded-[2.5rem] shadow-[8px_8px_0_0_#000] overflow-hidden">
           <div className="p-8 border-b-2 border-zinc-100 flex justify-between items-center bg-zinc-50">
             <h3 className="text-2xl font-black uppercase italic tracking-tighter">Day Transaction Log</h3>
-            <div className="px-4 py-1 bg-zinc-900 text-[#d4af37] rounded-full text-[10px] font-black uppercase tracking-widest">
+            <div className="px-4 py-1 bg-zinc-900 text-[#e76876] rounded-full text-[10px] font-black uppercase tracking-widest">
               {loading ? "Syncing..." : "Updated"}
             </div>
           </div>
@@ -149,8 +149,8 @@ export default function AnalyticsDashboard() {
 
         {/* 3. PERFORMANCE INSIGHTS */}
         <div className="space-y-6">
-          <div className="bg-zinc-900 text-white p-8 rounded-[2.5rem] border-4 border-zinc-900 shadow-[8px_8px_0_0_#d4af37]">
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#d4af37] mb-2">Efficiency</p>
+          <div className="bg-zinc-900 text-white p-8 rounded-[2.5rem] border-4 border-zinc-900 shadow-[8px_8px_0_0_#e76876]">
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#e76876] mb-2">Efficiency</p>
             <h3 className="text-3xl font-black uppercase italic leading-none mb-6">Store Health</h3>
             
             <div className="space-y-6">
@@ -162,11 +162,11 @@ export default function AnalyticsDashboard() {
               <div className="pt-6 border-t border-zinc-800">
                 <p className="text-[10px] font-bold uppercase text-zinc-500 mb-3">Service Split</p>
                 <div className="flex h-3 w-full rounded-full overflow-hidden bg-zinc-800">
-                  <div className="bg-[#d4af37]" style={{ width: `${(dineInCount / totalOrders) * 100}%` }} />
+                  <div className="bg-[#e76876]" style={{ width: `${(dineInCount / totalOrders) * 100}%` }} />
                   <div className="bg-emerald-500" style={{ width: `${(takeawayCount / totalOrders) * 100}%` }} />
                 </div>
                 <div className="flex justify-between mt-2 text-[9px] font-black uppercase">
-                  <span className="text-[#d4af37]">Dine-In ({dineInCount})</span>
+                  <span className="text-[#e76876]">Dine-In ({dineInCount})</span>
                   <span className="text-emerald-500">Takeaway ({takeawayCount})</span>
                 </div>
               </div>

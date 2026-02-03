@@ -58,26 +58,26 @@ export default function HistoryManager() {
   return (
     <div className="space-y-8 pb-20">
       {/* 1. HEADER & CONTROLS */}
-      <div className="bg-[#d4af37] p-8 rounded-[2.5rem] border-4 border-zinc-900 shadow-[8px_8px_0_0_#000] space-y-6">
+      <div className="bg-[#e76876] p-8 rounded-[2.5rem] border-4 border-zinc-900 shadow-[8px_8px_0_0_#000] space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-5">
-            <div className="bg-zinc-900 p-4 rounded-2xl text-[#d4af37] shadow-lg">
+            <div className="bg-zinc-900 p-4 rounded-2xl text-white shadow-lg">
               <TrendingUp size={32} />
             </div>
             <div>
-              <h2 className="text-4xl font-black uppercase italic tracking-tighter text-zinc-900 leading-none">Grill Analytics</h2>
-              <p className="text-[10px] font-black text-zinc-900/60 uppercase tracking-[0.2em] mt-1">Performance Tracking</p>
+              <h2 className="text-4xl font-black uppercase italic tracking-tighter text-white leading-none">Grill Analytics</h2>
+              <p className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em] mt-1">Performance Tracking</p>
             </div>
           </div>
 
           <div className="flex bg-zinc-900 p-1 rounded-xl border-2 border-zinc-900">
             <button 
               onClick={() => setViewMode('daily')}
-              className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${viewMode === 'daily' ? 'bg-[#d4af37] text-zinc-900' : 'text-zinc-500'}`}
+              className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${viewMode === 'daily' ? 'bg-[#e76876] text-zinc-900' : 'text-zinc-500'}`}
             >Daily</button>
             <button 
               onClick={() => setViewMode('weekly')}
-              className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${viewMode === 'weekly' ? 'bg-[#d4af37] text-zinc-900' : 'text-zinc-500'}`}
+              className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${viewMode === 'weekly' ? 'bg-[#e76876] text-zinc-900' : 'text-zinc-500'}`}
             >Weekly</button>
           </div>
         </div>
@@ -95,10 +95,10 @@ export default function HistoryManager() {
 
       {/* 2. STATS CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-zinc-900 p-8 rounded-[2rem] border-4 border-zinc-900 flex items-center justify-between text-white shadow-[6px_6px_0_0_#d4af37]">
+        <div className="bg-zinc-900 p-8 rounded-[2rem] border-4 border-zinc-900 flex items-center justify-between text-white shadow-[6px_6px_0_0_#e76876]">
           <div>
             <p className="text-[10px] font-black uppercase text-zinc-500 tracking-widest mb-2">Total Revenue</p>
-            <p className="text-5xl font-black italic text-[#d4af37] tracking-tighter">{formatCurrency(totalRevenue)}</p>
+            <p className="text-5xl font-black italic text-[#e76876] tracking-tighter">{formatCurrency(totalRevenue)}</p>
           </div>
           <Banknote size={50} className="opacity-20" />
         </div>

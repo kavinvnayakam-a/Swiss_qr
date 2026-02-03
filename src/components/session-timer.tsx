@@ -20,11 +20,11 @@ export default function SessionTimer({ timeLeft }: { timeLeft: number }) {
   return (
     <div className="flex items-center gap-1.5 transition-all">
       <Clock 
-        className={`h-3.5 w-3.5 ${isUrgent ? 'text-red-500 animate-pulse' : 'text-[#d4af37]'}`} 
+        className={`h-3.5 w-3.5 ${isUrgent ? 'text-red-500 animate-pulse' : 'text-white'}`} 
       />
       <span className={`
         text-sm font-black tabular-nums tracking-wider
-        ${isUrgent ? 'text-red-500' : 'text-[#d4af37]'}
+        ${isUrgent ? 'text-red-500' : 'text-white'}
       `}>
         {display}
       </span>

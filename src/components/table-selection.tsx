@@ -15,7 +15,7 @@ export default function TableSelection() {
 
   return (
     // Background color matches the CustomerView exactly
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#d4af37] p-4 selection:bg-zinc-900 selection:text-white">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#e76876] p-4 selection:bg-zinc-900 selection:text-white">
       
       {/* Brutalist Card: White background with heavy black borders */}
       <Card className="w-full max-w-2xl border-4 border-zinc-900 bg-white shadow-[12px_12px_0px_0px_#18181b] rounded-[2.5rem] overflow-hidden">
@@ -41,7 +41,7 @@ export default function TableSelection() {
                   border-2 border-zinc-900 
                   rounded-2xl
                   shadow-[4px_4px_0px_0px_#18181b] 
-                  hover:bg-[#d4af37] hover:text-zinc-900 
+                  hover:bg-[#e76876] hover:text-zinc-900 
                   active:shadow-none active:translate-x-1 active:translate-y-1 
                   transition-all
                 "

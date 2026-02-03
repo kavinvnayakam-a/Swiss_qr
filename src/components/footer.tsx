@@ -62,7 +62,7 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#d4af37] font-sans flex flex-col">
+    <div className="min-h-screen bg-[#e76876] font-sans flex flex-col">
       <Header tableId={tableId} onCartClick={() => setCartOpen(true)} timeLeft={timeLeft} />
       
       <main className="container mx-auto px-4 py-8 flex-1">
@@ -107,7 +107,7 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
       <footer className="mt-20 bg-zinc-900 text-white py-12 px-6 border-t-4 border-white">
         <div className="container mx-auto flex flex-col items-center gap-6">
           {/* Brand Logo */}
-          <div className="text-2xl font-black italic uppercase tracking-tighter text-[#d4af37]">
+          <div className="text-2xl font-black italic uppercase tracking-tighter text-[#e76876]">
             Grillicious
           </div>
           
@@ -120,10 +120,10 @@ export default function CustomerView({ tableId }: { tableId: string | null }) {
             rel="noopener noreferrer"
             className="group flex flex-col items-center gap-2 transition-transform hover:scale-105"
           >
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-500 group-hover:text-[#d4af37] transition-colors">
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-zinc-500 group-hover:text-[#e76876] transition-colors">
               Designed By
             </span>
-            <div className="flex items-center gap-2 bg-white px-5 py-2 rounded-2xl border-2 border-[#d4af37] shadow-[4px_4px_0_0_#d4af37] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all">
+            <div className="flex items-center gap-2 bg-white px-5 py-2 rounded-2xl border-2 border-[#e76876] shadow-[4px_4px_0_0_#e76876] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all">
               <span className="text-zinc-900 font-black text-xl tracking-tight">GetPik</span>
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>

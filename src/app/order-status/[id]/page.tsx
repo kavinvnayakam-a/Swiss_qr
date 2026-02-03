@@ -206,7 +206,7 @@ export default function OrderStatusPage() {
         pipes.push({ x: canvas.width, top, bottom: top + gap, passed: false });
       }
       pipes.forEach((p) => {
-        p.x -= 2.5; ctx.fillStyle = "#d4af37";
+        p.x -= 2.5; ctx.fillStyle = "#e76876";
         ctx.fillRect(p.x, 0, 60, p.top); ctx.fillRect(p.x, p.bottom, 60, canvas.height - p.bottom);
         if (birdX + 20 > p.x && birdX - 20 < p.x + 60 && (birdY - 20 < p.top || birdY + 20 > p.bottom)) { setGameActive(false); setIsGrilled(true); }
         if (!p.passed && p.x + 60 < birdX) { setScore(prev => prev + 1); p.passed = true; }
@@ -230,13 +230,13 @@ export default function OrderStatusPage() {
       {/* --- HEADER UI --- */}
       <div className={`absolute top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50 flex flex-col gap-4 transition-all duration-700 transform ${gameActive ? '-translate-y-[150%] opacity-0' : 'translate-y-0 opacity-100'}`}>
         <div className="flex gap-2">
-          <div className="bg-white border-4 border-zinc-900 rounded-[1.5rem] p-4 flex flex-col items-center justify-center shadow-[4px_4px_0_0_#d4af37]">
+          <div className="bg-white border-4 border-zinc-900 rounded-[1.5rem] p-4 flex flex-col items-center justify-center shadow-[4px_4px_0_0_#e76876]">
             <p className="text-[10px] font-black uppercase text-zinc-400 leading-none mb-1">Table</p>
             <p className="text-3xl font-black italic text-zinc-900 leading-none">{orderData?.tableId}</p>
           </div>
-          <div className="flex-1 bg-zinc-900 border-4 border-[#d4af37] rounded-[1.5rem] p-4 flex flex-col items-center justify-center">
-            <p className="text-[10px] font-black uppercase text-[#d4af37]/50 leading-none mb-1">Order Number</p>
-            <p className="text-3xl font-black italic text-[#d4af37] leading-none tracking-tighter">#{orderData?.orderNumber}</p>
+          <div className="flex-1 bg-zinc-900 border-4 border-[#e76876] rounded-[1.5rem] p-4 flex flex-col items-center justify-center">
+            <p className="text-[10px] font-black uppercase text-[#e76876]/50 leading-none mb-1">Order Number</p>
+            <p className="text-3xl font-black italic text-[#e76876] leading-none tracking-tighter">#{orderData?.orderNumber}</p>
           </div>
         </div>
 
@@ -245,7 +245,7 @@ export default function OrderStatusPage() {
           <div className="relative h-14 w-full bg-zinc-800 rounded-2xl overflow-hidden border-2 border-zinc-700">
             <div 
               className={`h-full transition-all duration-1000 ${
-                status === 'Pending' ? 'bg-rose-500' : status === 'Served' ? 'bg-emerald-500' : 'bg-[#d4af37]'
+                status === 'Pending' ? 'bg-rose-500' : status === 'Served' ? 'bg-emerald-500' : 'bg-[#e76876]'
               }`}
               style={{ width: status === 'Pending' ? '30%' : status === 'Served' ? '100%' : '65%' }}
             />
@@ -269,11 +269,11 @@ export default function OrderStatusPage() {
       {!gameActive && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50 flex gap-3 animate-in fade-in slide-in-from-bottom duration-500">
           <button onClick={() => setShowOrderMore(true)} className="flex-1 bg-zinc-900 border-4 border-white text-white rounded-[1.5rem] p-4 flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all">
-            <PlusCircle size={20} className="text-[#d4af37]" />
+            <PlusCircle size={20} className="text-[#e76876]" />
             <span className="text-xs font-black uppercase italic">Order More</span>
           </button>
           
-          <button onClick={requestHelp} className={`flex-1 border-4 rounded-[1.5rem] p-4 flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all ${orderData?.helpRequested ? 'bg-emerald-500 border-emerald-600 text-white animate-pulse' : 'bg-[#d4af37] border-zinc-900 text-zinc-900'}`}>
+          <button onClick={requestHelp} className={`flex-1 border-4 rounded-[1.5rem] p-4 flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all ${orderData?.helpRequested ? 'bg-emerald-500 border-emerald-600 text-white animate-pulse' : 'bg-[#e76876] border-zinc-900 text-zinc-900'}`}>
             {orderData?.helpRequested ? <BellRing size={20} /> : <MessageCircleQuestion size={20} />}
             <span className="text-xs font-black uppercase italic">{orderData?.helpRequested ? 'Coming!' : 'Help'}</span>
           </button>
@@ -283,7 +283,7 @@ export default function OrderStatusPage() {
       {/* --- ORDER MORE POPUP --- */}
       {showOrderMore && (
         <div className="absolute inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-end">
-          <div className="w-full bg-white rounded-t-[3rem] p-8 animate-in slide-in-from-bottom duration-300 border-t-8 border-[#d4af37] max-h-[85vh] flex flex-col">
+          <div className="w-full bg-white rounded-t-[3rem] p-8 animate-in slide-in-from-bottom duration-300 border-t-8 border-[#e76876] max-h-[85vh] flex flex-col">
             <div className="flex justify-between items-center mb-6 text-zinc-900">
               <h2 className="text-3xl font-black uppercase italic leading-none">Add to Bill</h2>
               <button onClick={() => setShowOrderMore(false)} className="p-2 bg-zinc-100 rounded-full"><X size={24} /></button>
@@ -291,18 +291,18 @@ export default function OrderStatusPage() {
             
             <div className="relative mb-6 text-zinc-900">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
-              <input type="text" placeholder="Search menu..." className="w-full pl-12 pr-4 py-4 bg-zinc-100 border-4 border-zinc-100 rounded-2xl font-bold outline-none focus:border-[#d4af37]" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <input type="text" placeholder="Search menu..." className="w-full pl-12 pr-4 py-4 bg-zinc-100 border-4 border-zinc-100 rounded-2xl font-bold outline-none focus:border-[#e76876]" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
             
             <div className="flex-1 overflow-y-auto space-y-4 pr-2 pb-6">
-              {loadingMenu ? <div className="flex justify-center py-10"><Loader2 className="animate-spin text-[#d4af37]" size={32} /></div> : Object.keys(groupedMenu).map((cat) => (
+              {loadingMenu ? <div className="flex justify-center py-10"><Loader2 className="animate-spin text-[#e76876]" size={32} /></div> : Object.keys(groupedMenu).map((cat) => (
                 <div key={cat} className="space-y-2">
                   <button onClick={() => toggleCategory(cat)} className="w-full flex justify-between bg-zinc-900 p-4 rounded-xl text-white font-black uppercase italic text-[10px] items-center tracking-widest">
                     <span>{cat} ({groupedMenu[cat].length})</span>
                     {expandedCategories[cat] ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
                   </button>
                   {expandedCategories[cat] && groupedMenu[cat].map((item) => (
-                    <button key={item.id} onClick={() => addMoreFood(item)} className="w-full flex justify-between items-center p-4 bg-zinc-50 border-4 border-zinc-100 rounded-2xl hover:border-[#d4af37] transition-all">
+                    <button key={item.id} onClick={() => addMoreFood(item)} className="w-full flex justify-between items-center p-4 bg-zinc-50 border-4 border-zinc-100 rounded-2xl hover:border-[#e76876] transition-all">
                       <span className="text-sm font-black uppercase italic text-zinc-900">{item.name}</span>
                       <div className="flex items-center gap-3 text-zinc-900"><span className="font-bold text-zinc-400">₹{item.price}</span><PlusCircle size={20} /></div>
                     </button>
@@ -317,10 +317,10 @@ export default function OrderStatusPage() {
       {/* --- GAME OVERLAY --- */}
       {!gameActive && !showOrderMore && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm p-8">
-          <div className="bg-white border-8 border-zinc-900 p-8 rounded-[4rem] shadow-[15px_15px_0_0_#d4af37] text-center space-y-6 max-w-sm animate-in zoom-in-95 duration-300">
+          <div className="bg-white border-8 border-zinc-900 p-8 rounded-[4rem] shadow-[15px_15px_0_0_#e76876] text-center space-y-6 max-w-sm animate-in zoom-in-95 duration-300">
             {isGrilled ? <div className="text-8xl">🍗</div> : <div className="text-8xl animate-bounce">🐔</div>}
             <h2 className="text-5xl font-black uppercase italic text-zinc-900 leading-none">GRILL HOP</h2>
-            <button onClick={startAndUnmute} className="w-full bg-[#d4af37] text-zinc-900 py-6 rounded-3xl font-black uppercase italic text-2xl shadow-[0_8px_0_0_#b3922d] active:shadow-none active:translate-y-1 transition-all">PLAY NOW</button>
+            <button onClick={startAndUnmute} className="w-full bg-[#e76876] text-zinc-900 py-6 rounded-3xl font-black uppercase italic text-2xl shadow-[0_8px_0_0_#c44a59] active:shadow-none active:translate-y-1 transition-all">PLAY NOW</button>
           </div>
         </div>
       )}
@@ -328,7 +328,7 @@ export default function OrderStatusPage() {
       {/* --- HUD --- */}
       {gameActive && (
         <div className="absolute bottom-10 left-10 z-50 flex items-baseline gap-2 pointer-events-none bg-black/40 p-4 rounded-3xl backdrop-blur-sm border border-white/10">
-          <span className="text-7xl font-black italic text-[#d4af37] drop-shadow-[4px_4px_0_#000] leading-none">{score}</span>
+          <span className="text-7xl font-black italic text-[#e76876] drop-shadow-[4px_4px_0_#000] leading-none">{score}</span>
           <span className="text-xs font-black text-white uppercase tracking-widest">Points</span>
         </div>
       )}

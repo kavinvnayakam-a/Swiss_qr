@@ -179,7 +179,7 @@ export default function OrderManager() {
                   key={tId} 
                   onClick={() => setSelectedTable(tId)} 
                   className={`p-6 rounded-[2rem] border-4 transition-all ${
-                    selectedTable === tId ? "bg-zinc-900 text-white border-zinc-900 shadow-[6px_6px_0_0_#d4af37]" : 
+                    selectedTable === tId ? "bg-zinc-900 text-white border-zinc-900 shadow-[6px_6px_0_0_#e76876]" : 
                     hasHelp ? "bg-rose-500 text-white border-zinc-900 animate-pulse" :
                     tableMap[tId]?.length ? "bg-rose-500 text-white border-zinc-900" : "bg-emerald-500 text-white border-zinc-900"
                   }`}
@@ -194,13 +194,13 @@ export default function OrderManager() {
       <div className="lg:col-span-3 space-y-6">
         {selectedTable ? (
           <div className="animate-in fade-in duration-300">
-            <div className="flex justify-between items-center bg-zinc-900 p-6 rounded-[2.5rem] text-white mb-6 border-b-4 border-[#d4af37]">
+            <div className="flex justify-between items-center bg-zinc-900 p-6 rounded-[2.5rem] text-white mb-6 border-b-4 border-[#e76876]">
               <div>
                 <h3 className="text-3xl font-black italic uppercase tracking-tighter">TABLE {selectedTable}</h3>
-                <p className="text-[10px] text-[#d4af37] font-bold uppercase">{tableMap[selectedTable]?.length || 0} ACTIVE ORDERS</p>
+                <p className="text-[10px] text-[#e76876] font-bold uppercase">{tableMap[selectedTable]?.length || 0} ACTIVE ORDERS</p>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => window.print()} className="bg-[#d4af37] text-zinc-900 px-4 py-3 rounded-xl font-black text-xs uppercase italic flex items-center gap-2 shadow-[4px_4px_0_0_#000]"><Printer size={16}/> Print Bill</button>
+                <button onClick={() => window.print()} className="bg-[#e76876] text-zinc-900 px-4 py-3 rounded-xl font-black text-xs uppercase italic flex items-center gap-2 shadow-[4px_4px_0_0_#000]"><Printer size={16}/> Print Bill</button>
                 <button onClick={() => archiveTable(selectedTable)} className="bg-rose-500 text-white px-4 py-3 rounded-xl font-black text-xs uppercase italic shadow-[4px_4px_0_0_#000]">Clear Table</button>
               </div>
             </div>
@@ -219,7 +219,7 @@ export default function OrderManager() {
 
                   <div className="flex justify-between items-center mb-4">
                     <button onClick={() => setSelectedForBill(prev => prev.includes(order.id) ? prev.filter(x => x !== order.id) : [...prev, order.id])}>
-                       {selectedForBill.includes(order.id) ? <CheckSquare size={24} className="text-[#d4af37]"/> : <Square size={24}/>}
+                       {selectedForBill.includes(order.id) ? <CheckSquare size={24} className="text-[#e76876]"/> : <Square size={24}/>}
                     </button>
                     <span className="font-black text-xs bg-zinc-100 px-2 py-1 rounded">#{order.orderNumber}</span>
                   </div>
@@ -227,7 +227,7 @@ export default function OrderManager() {
                   <div className="space-y-4 flex-1">
                     {/* APPROVE BUTTON */}
                     {order.status === 'Pending' && (
-                      <button onClick={() => approveOrder(order.id)} className="w-full bg-[#d4af37] py-4 rounded-2xl font-black uppercase italic text-sm flex items-center justify-center gap-2 border-2 border-zinc-900 shadow-[4px_4px_0_0_#000] mb-4">
+                      <button onClick={() => approveOrder(order.id)} className="w-full bg-[#e76876] py-4 rounded-2xl font-black uppercase italic text-sm flex items-center justify-center gap-2 border-2 border-zinc-900 shadow-[4px_4px_0_0_#000] mb-4">
                         <Check size={18}/> Approve Order
                       </button>
                     )}
@@ -240,7 +240,7 @@ export default function OrderManager() {
                              {item.quantity}x {item.name}
                           </span>
                           {item.status !== 'Served' && (
-                            <button onClick={() => markItemServed(order.id, idx)} className="bg-zinc-900 text-[#d4af37] px-3 py-1 rounded-lg text-[10px] font-black uppercase italic">Serve</button>
+                            <button onClick={() => markItemServed(order.id, idx)} className="bg-zinc-900 text-[#e76876] px-3 py-1 rounded-lg text-[10px] font-black uppercase italic">Serve</button>
                           )}
                         </div>
                       ))}
@@ -277,7 +277,7 @@ export default function OrderManager() {
             <div className="space-y-4 overflow-y-auto max-h-[60vh] pr-2">
               <div className="space-y-1">
                 <label className="text-[10px] font-black uppercase text-zinc-400">Shop Name</label>
-                <input className="w-full p-4 bg-zinc-100 rounded-2xl font-bold outline-none focus:ring-2 ring-[#d4af37]" value={printSettings.storeName} onChange={e => setPrintSettings({...printSettings, storeName: e.target.value})} />
+                <input className="w-full p-4 bg-zinc-100 rounded-2xl font-bold outline-none focus:ring-2 ring-[#e76876]" value={printSettings.storeName} onChange={e => setPrintSettings({...printSettings, storeName: e.target.value})} />
               </div>
               <div className="space-y-1">
                 <label className="text-[10px] font-black uppercase text-zinc-400">Address</label>
@@ -298,7 +298,7 @@ export default function OrderManager() {
                 <input className="w-full p-4 bg-zinc-100 rounded-2xl font-bold" value={printSettings.footerMessage} onChange={e => setPrintSettings({...printSettings, footerMessage: e.target.value})} />
               </div>
             </div>
-            <button onClick={saveSettings} className="w-full bg-zinc-900 text-[#d4af37] py-5 rounded-3xl font-black uppercase italic flex items-center justify-center gap-2 shadow-[0_6px_0_0_#000] active:translate-y-1 active:shadow-none transition-all">
+            <button onClick={saveSettings} className="w-full bg-zinc-900 text-[#e76876] py-5 rounded-3xl font-black uppercase italic flex items-center justify-center gap-2 shadow-[0_6px_0_0_#000] active:translate-y-1 active:shadow-none transition-all">
               <Save size={20} /> Update Bill Template
             </button>
           </div>

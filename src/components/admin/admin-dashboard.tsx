@@ -32,7 +32,7 @@ export default function AdminDashboard() {
     ));
     toast({
       title: 'Order Updated',
-      className: "bg-zinc-900 text-white border-b-4 border-[#d4af37]",
+      className: "bg-zinc-900 text-white border-b-4 border-[#e76876]",
       description: `Order #${orderId.slice(0,4)} is now ${status}.`,
     });
   }, [setOrders, toast]);
@@ -85,10 +85,10 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans pb-20">
-      <header className="bg-zinc-900 border-b-4 border-[#d4af37] sticky top-0 z-50 shadow-xl">
+      <header className="bg-zinc-900 border-b-4 border-[#e76876] sticky top-0 z-50 shadow-xl">
         <div className="container mx-auto flex h-20 items-center justify-between px-4">
           <div className="flex items-center gap-3">
-            <div className="bg-[#d4af37] p-2 rounded-xl border-2 border-white">
+            <div className="bg-[#e76876] p-2 rounded-xl border-2 border-white">
               <UtensilsCrossed className="h-5 w-5 text-zinc-900" />
             </div>
             <h1 className="text-2xl font-black italic uppercase tracking-tighter text-white">Admin Hub</h1>
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
               onClick={() => { setAuth(false); router.push('/admin/login'); }} 
               className="text-white hover:bg-white/10 text-[10px] font-black uppercase"
             >
-              <LogOut className="mr-2 h-4 w-4 text-[#d4af37]"/> Logout
+              <LogOut className="mr-2 h-4 w-4 text-[#e76876]"/> Logout
             </Button>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
         
         {/* SECTION 1: TOP ANALYTICS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white border-4 border-zinc-900 p-6 rounded-[2rem] shadow-[8px_8px_0px_0px_rgba(212,175,55,1)]">
+          <div className="bg-white border-4 border-zinc-900 p-6 rounded-[2rem] shadow-[8px_8px_0px_0px_#e76876]">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Today's Revenue</p>
@@ -136,9 +136,9 @@ export default function AdminDashboard() {
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Active Tables</p>
-                <p className="text-4xl font-black text-[#d4af37] mt-1">{analytics.activeTableCount} / 12</p>
+                <p className="text-4xl font-black text-[#e76876] mt-1">{analytics.activeTableCount} / 12</p>
               </div>
-              <div className="bg-white/10 p-3 rounded-2xl"><Users className="text-[#d4af37] h-6 w-6" /></div>
+              <div className="bg-white/10 p-3 rounded-2xl"><Users className="text-[#e76876] h-6 w-6" /></div>
             </div>
           </div>
 
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
         {/* SECTION 2: TABLE GRID MAP */}
         <section>
           <h2 className="text-xl font-black uppercase italic text-zinc-900 mb-4 flex items-center gap-2">
-            <div className="h-2 w-2 bg-[#d4af37] rounded-full" /> Floor Map
+            <div className="h-2 w-2 bg-[#e76876] rounded-full" /> Floor Map
           </h2>
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-12 gap-3">
             {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => {
@@ -165,11 +165,11 @@ export default function AdminDashboard() {
                 <div key={num} className={`
                   aspect-square flex flex-col items-center justify-center rounded-2xl border-2 transition-all
                   ${isActive 
-                    ? 'bg-zinc-900 border-[#d4af37] text-white shadow-[4px_4px_0px_0px_#d4af37] animate-pulse' 
+                    ? 'bg-zinc-900 border-[#e76876] text-white shadow-[4px_4px_0px_0px_#e76876] animate-pulse' 
                     : 'bg-white border-zinc-200 text-zinc-300'}
                 `}>
                   <span className="text-xs font-black">T-{num}</span>
-                  {isActive && <span className="text-[8px] uppercase mt-1 font-bold text-[#d4af37]">Live</span>}
+                  {isActive && <span className="text-[8px] uppercase mt-1 font-bold text-[#e76876]">Live</span>}
                 </div>
               );
             })}

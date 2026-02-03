@@ -71,7 +71,7 @@ export function CartSheet({ isOpen, onOpenChange, tableId }: CartSheetProps) {
       toast({
         title: `Order #${orderNumber} Sent! 🚀`,
         description: "Waiting for kitchen approval...",
-        className: "bg-zinc-900 text-white border-b-4 border-[#d4af37]",
+        className: "bg-zinc-900 text-white border-b-4 border-[#e76876]",
       });
 
       clearCart();
@@ -94,11 +94,11 @@ export function CartSheet({ isOpen, onOpenChange, tableId }: CartSheetProps) {
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent 
         side="right" 
-        className="flex flex-col bg-zinc-900 border-l-4 border-[#d4af37] text-white w-[85vw] sm:max-w-md p-0 overflow-hidden"
+        className="flex flex-col bg-zinc-900 border-l-4 border-[#e76876] text-white w-[85vw] sm:max-w-md p-0 overflow-hidden"
       >
         <SheetHeader className="p-6 border-b border-zinc-800">
           <SheetTitle className="text-xl font-black uppercase italic tracking-tighter text-white flex items-center gap-2">
-            <ShoppingBag className="text-[#d4af37] h-5 w-5" /> 
+            <ShoppingBag className="text-[#e76876] h-5 w-5" /> 
             {tableId ? `Table ${tableId}` : 'Takeaway Order'}
           </SheetTitle>
         </SheetHeader>
@@ -132,21 +132,21 @@ export function CartSheet({ isOpen, onOpenChange, tableId }: CartSheetProps) {
                     <p className="font-black uppercase italic tracking-tight text-xs truncate leading-none mb-1">
                       {item.name}
                     </p>
-                    <p className="text-[#d4af37] font-bold text-xs">
+                    <p className="text-[#e76876] font-bold text-xs">
                       {formatCurrency(item.price)}
                     </p>
                     
                     <div className="flex items-center gap-2 mt-2">
                       <div className="flex items-center bg-zinc-800 rounded-lg border border-zinc-700 p-0.5">
                         <button 
-                          className="p-1 hover:text-[#d4af37] transition-colors"
+                          className="p-1 hover:text-[#e76876] transition-colors"
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                         >
                           <Minus className="h-3 w-3"/>
                         </button>
                         <span className="w-6 text-center font-bold text-[10px] tabular-nums">{item.quantity}</span>
                         <button 
-                          className="p-1 hover:text-[#d4af37] transition-colors"
+                          className="p-1 hover:text-[#e76876] transition-colors"
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                         >
                           <Plus className="h-3 w-3"/>
@@ -172,7 +172,7 @@ export function CartSheet({ isOpen, onOpenChange, tableId }: CartSheetProps) {
             <div className="w-full space-y-4">
               <div className="flex justify-between items-end px-2">
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500">Total</span>
-                <div className="text-4xl font-black text-[#d4af37] tracking-tighter tabular-nums">
+                <div className="text-4xl font-black text-[#e76876] tracking-tighter tabular-nums">
                   {formatCurrency(cartTotal)}
                 </div>
               </div>
@@ -180,7 +180,7 @@ export function CartSheet({ isOpen, onOpenChange, tableId }: CartSheetProps) {
               <Button
                 onClick={handlePlaceOrder}
                 disabled={isPlacingOrder}
-                className="w-full h-16 text-base font-black uppercase italic tracking-widest bg-[#d4af37] text-zinc-900 hover:bg-white rounded-2xl shadow-[0_8px_0_0_#b3922d] active:shadow-none active:translate-y-1 transition-all flex items-center justify-center gap-3"
+                className="w-full h-16 text-base font-black uppercase italic tracking-widest bg-[#e76876] text-zinc-900 hover:bg-white rounded-2xl shadow-[0_8px_0_0_#c44a59] active:shadow-none active:translate-y-1 transition-all flex items-center justify-center gap-3"
               >
                 {isPlacingOrder ? (
                   <>

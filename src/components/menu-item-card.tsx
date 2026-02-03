@@ -73,7 +73,7 @@ export function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
           <Button
             onClick={() => onAddToCart(item)}
             disabled={isSoldOut}
-            className="w-full h-16 rounded-s2xl bg-zinc-900 text-white hover:bg-zinc-800 font-black uppercase italic tracking-widest transition-all shadow-[6px_6px_0px_0px_#d4af37] active:shadow-none active:translate-x-1 active:translate-y-1 text-lg disabled:bg-zinc-300 disabled:shadow-none disabled:text-zinc-500 disabled:cursor-not-allowed"
+            className="w-full h-16 rounded-s2xl bg-zinc-900 text-white hover:bg-zinc-800 font-black uppercase italic tracking-widest transition-all shadow-[6px_6px_0px_0px_#e76876] active:shadow-none active:translate-x-1 active:translate-y-1 text-lg disabled:bg-zinc-300 disabled:shadow-none disabled:text-zinc-500 disabled:cursor-not-allowed"
           >
             {isSoldOut ? 'Unavailable' : 'Add to Order'}
           </Button>

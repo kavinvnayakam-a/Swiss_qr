@@ -41,7 +41,7 @@ export default function AdminDashboard() {
     <div className="flex flex-col md:flex-row min-h-screen bg-white font-sans selection:bg-zinc-900 selection:text-white">
       
       {/* 1. SIDEBAR - Mustard Yellow */}
-      <nav className="w-full md:w-72 bg-[#d4af37] text-zinc-900 flex md:flex-col border-b-4 md:border-b-0 md:border-r-4 border-zinc-900 z-40">
+      <nav className="w-full md:w-72 bg-[#e76876] text-zinc-900 flex md:flex-col border-b-4 md:border-b-0 md:border-r-4 border-zinc-900 z-40">
         
         {/* Logo Section */}
         <div className="hidden md:block p-8 border-b-2 border-zinc-900/10">
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab('orders')}
             className={`flex items-center justify-between p-4 rounded-2xl font-black uppercase italic transition-all border-2 ${
               activeTab === 'orders' 
-              ? 'bg-zinc-900 text-[#d4af37] border-zinc-900 shadow-[4px_4px_0_0_#000]' 
+              ? 'bg-zinc-900 text-[#e76876] border-zinc-900 shadow-[4px_4px_0_0_#000]' 
               : 'text-zinc-900 border-transparent hover:bg-zinc-900/10'
             }`}
           >
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab('history')}
             className={`flex items-center gap-4 p-4 rounded-2xl font-black uppercase italic transition-all border-2 ${
               activeTab === 'history' 
-              ? 'bg-zinc-900 text-[#d4af37] border-zinc-900 shadow-[4px_4px_0_0_#000]' 
+              ? 'bg-zinc-900 text-[#e76876] border-zinc-900 shadow-[4px_4px_0_0_#000]' 
               : 'text-zinc-900 border-transparent hover:bg-zinc-900/10'
             }`}
           >
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab('menu')}
             className={`flex items-center gap-4 p-4 rounded-2xl font-black uppercase italic transition-all border-2 ${
               activeTab === 'menu' 
-              ? 'bg-zinc-900 text-[#d4af37] border-zinc-900 shadow-[4px_4px_0_0_#000]' 
+              ? 'bg-zinc-900 text-[#e76876] border-zinc-900 shadow-[4px_4px_0_0_#000]' 
               : 'text-zinc-900 border-transparent hover:bg-zinc-900/10'
             }`}
           >
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab('analytics')}
             className={`flex items-center gap-4 p-4 rounded-2xl font-black uppercase italic transition-all border-2 ${
               activeTab === 'analytics' 
-              ? 'bg-zinc-900 text-[#d4af37] border-zinc-900 shadow-[4px_4px_0_0_#000]' 
+              ? 'bg-zinc-900 text-[#e76876] border-zinc-900 shadow-[4px_4px_0_0_#000]' 
               : 'text-zinc-900 border-transparent hover:bg-zinc-900/10'
             }`}
           >
@@ -131,7 +131,7 @@ export default function AdminDashboard() {
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
         
         {/* STICKY HEADER - Mustard Yellow */}
-        <header className="sticky top-0 z-30 bg-[#d4af37] border-b-4 border-zinc-900 px-6 py-6 md:px-12 md:py-8">
+        <header className="sticky top-0 z-30 bg-[#e76876] border-b-4 border-zinc-900 px-6 py-6 md:px-12 md:py-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="md:hidden text-2xl font-black italic uppercase tracking-tighter">G.</div>
@@ -148,17 +148,17 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-4 self-end md:self-center">
               {/* Table Legend - Only on Orders */}
               {activeTab === 'orders' && (
-                <div className="flex gap-4 bg-zinc-900 text-[#d4af37] px-4 py-2 rounded-xl border-2 border-zinc-900 shadow-sm">
+                <div className="flex gap-4 bg-zinc-900 text-[#e76876] px-4 py-2 rounded-xl border-2 border-zinc-900 shadow-sm">
                   <div className="flex items-center gap-2 text-[9px] font-black uppercase">
                     <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" /> Occupied
                   </div>
-                  <div className="flex items-center gap-2 text-[9px] font-black uppercase text-[#d4af37]/60">
+                  <div className="flex items-center gap-2 text-[9px] font-black uppercase text-[#e76876]/60">
                     <div className="w-2 h-2 rounded-full bg-emerald-500" /> Available
                   </div>
                 </div>
               )}
               
-              <button className="p-3 bg-zinc-900 text-[#d4af37] rounded-xl border-2 border-zinc-900 relative">
+              <button className="p-3 bg-zinc-900 text-[#e76876] rounded-xl border-2 border-zinc-900 relative">
                 <Bell size={20} />
                 {takeawayCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border-2 border-zinc-900 animate-bounce">
@@ -208,7 +208,7 @@ export default function AdminDashboard() {
             </Link>
         </div>
       </div>
-      <Link href="mailto:info@getpik.in" className="fixed bottom-6 right-6 z-50 bg-zinc-900 text-white p-4 rounded-full shadow-lg border-2 border-[#d4af37] hover:bg-zinc-800 transition-colors">
+      <Link href="mailto:info@getpik.in" className="fixed bottom-6 right-6 z-50 bg-zinc-900 text-white p-4 rounded-full shadow-lg border-2 border-[#e76876] hover:bg-zinc-800 transition-colors">
           <MessageCircleQuestion className="h-6 w-6" />
           <span className="sr-only">Support</span>
       </Link>

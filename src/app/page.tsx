@@ -13,7 +13,7 @@ export default function Home({
   return (
     <Suspense 
       fallback={
-        <div className="h-screen w-full flex flex-col items-center justify-center bg-[#d4af37]">
+        <div className="h-screen w-full flex flex-col items-center justify-center bg-[#e76876]">
           <Image src="https://firebasestorage.googleapis.com/v0/b/grillicious-backend.firebasestorage.app/o/Grillicious-logo.webp?alt=media&token=efbfa1e4-5a67-417f-aff0-bef82099852a" alt="Grillicious Logo" width={300} height={75} className="animate-pulse" />
         </div>
       }

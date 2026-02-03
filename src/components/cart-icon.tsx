@@ -31,7 +31,7 @@ export function CartIcon({ onOpen }: { onOpen?: () => void }) {
         bg-zinc-900 text-white
         py-5 px-3
         rounded-l-[2rem]
-        border-y-2 border-l-2 border-[#d4af37]
+        border-y-2 border-l-2 border-[#e76876]
         
         /* Interaction */
         shadow-[-10px_0px_30px_rgba(0,0,0,0.2)]
@@ -43,7 +43,7 @@ export function CartIcon({ onOpen }: { onOpen?: () => void }) {
       {/* Item Count Badge - Mustard Yellow bubble */}
       <div className="
         flex h-6 w-6 items-center justify-center 
-        rounded-full bg-[#d4af37] text-zinc-900 
+        rounded-full bg-[#e76876] text-zinc-900 
         text-[10px] font-black border-2 border-white
         shadow-sm
       ">
@@ -51,7 +51,7 @@ export function CartIcon({ onOpen }: { onOpen?: () => void }) {
       </div>
 
       {/* Bag Icon */}
-      <ShoppingBag className="h-6 w-6 text-[#d4af37]" />
+      <ShoppingBag className="h-6 w-6 text-[#e76876]" />
 
       {/* Vertical Branding Text */}
       <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-black uppercase tracking-[0.2em] mt-1">

@@ -101,7 +101,7 @@ export default function MenuManager() {
             </label>
           </div>
 
-          <Button disabled={isUploading} className="bg-zinc-900 text-white font-black uppercase italic h-10 rounded-xl">
+          <Button disabled={isUploading} className="bg-zinc-900 text-white hover:bg-[#e76876] hover:text-zinc-900 font-black uppercase italic h-10 rounded-xl">
             {isUploading ? <Loader2 className="animate-spin" /> : "Save to Cloud"}
           </Button>
         </form>
