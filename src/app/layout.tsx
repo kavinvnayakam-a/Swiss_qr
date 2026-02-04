@@ -5,7 +5,7 @@ import { CartProvider } from '@/context/cart-context';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'Swiss Delights', // Updated to match your new branding
+  title: 'Grillicious', // Updated to match your new branding
   description: 'Sizzling flavors, delivered fast.',
 };
 

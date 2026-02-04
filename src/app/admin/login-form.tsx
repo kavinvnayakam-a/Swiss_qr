@@ -59,7 +59,7 @@ export default function LoginForm() {
         </Button>
         
         <p className="text-[9px] text-center text-zinc-400 font-bold uppercase tracking-widest">
-          Swiss Delights Management System v1.0
+          Grillicious Management System v1.0
         </p>
       </CardContent>
     </Card>

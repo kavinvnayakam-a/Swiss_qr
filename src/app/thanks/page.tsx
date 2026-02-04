@@ -29,7 +29,9 @@ export default function ThankYouPage() {
           </div>
         </div>
 
-        <Image src="https://firebasestorage.googleapis.com/v0/b/swissdelights-2a272.firebasestorage.app/o/Swiss_logo.webp?alt=media&token=70912942-ad4e-4840-9c22-99ab267c42c6" alt="Swiss Delights Logo" width={250} height={63} className="mx-auto mb-2" />
+        <div className="bg-white rounded-full p-4 inline-block mx-auto mb-2">
+          <Image src="https://firebasestorage.googleapis.com/v0/b/grillicious-backend.firebasestorage.app/o/Grillicious-logo.webp?alt=media&token=efbfa1e4-5a67-417f-aff0-bef82099852a" alt="Grillicious Logo" width={250} height={63} />
+        </div>
         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 mb-6">
           Hearts Full. Bellies Fuller.
         </p>
