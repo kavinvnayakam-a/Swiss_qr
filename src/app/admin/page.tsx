@@ -18,14 +18,20 @@ import {
   Coffee,
   TrendingUp,
   Settings,
-  ShieldCheck
+  ShieldCheck,
+  Database
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { pushLocalMenuToFirestore } from "@/lib/sync-menu";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'orders' | 'history' | 'menu' | 'analytics'>('orders');
   const [takeawayCount, setTakeawayCount] = useState(0);
   const firestore = useFirestore();
+  const { toast } = useToast();
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // --- LOGIC PRESERVED: Live listener for Takeaway order count ---
   useEffect(() => {
@@ -41,6 +47,37 @@ export default function AdminDashboard() {
     
     return () => unsubscribe();
   }, [firestore]);
+
+  const handleMenuSync = async () => {
+    if (!firestore) {
+       toast({
+        variant: "destructive",
+        title: "Sync Failed",
+        description: "Firestore not initialized.",
+      });
+      return;
+    }
+    if (!confirm("This will overwrite the cloud menu with your local data file. Are you sure?")) {
+      return;
+    }
+    setIsSyncing(true);
+    const result = await pushLocalMenuToFirestore(firestore);
+    setIsSyncing(false);
+
+    if (result.success) {
+      toast({
+        title: "Sync Successful",
+        description: `Uploaded ${result.count} items to the database.`,
+        className: "bg-emerald-600 text-white border-b-4 border-zinc-900",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Sync Failed",
+        description: result.error,
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-[#FDFDFD] font-sans selection:bg-[#b73538] selection:text-white">
@@ -164,6 +201,17 @@ export default function AdminDashboard() {
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Store Live</span>
               </div>
               
+              <Button 
+                variant="default"
+                size="sm" 
+                disabled={isSyncing}
+                onClick={handleMenuSync} 
+                className="bg-[#b73538] hover:bg-[#a02e31] text-white border-none text-[10px] font-black uppercase shadow-lg shadow-red-900/40"
+              >
+                <Database className={`mr-2 h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`}/> 
+                {isSyncing ? 'Syncing...' : 'Sync Menu'}
+              </Button>
+
               <button className="p-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl relative hover:bg-slate-50 transition-colors">
                 <Bell size={18} />
                 {takeawayCount > 0 && (
