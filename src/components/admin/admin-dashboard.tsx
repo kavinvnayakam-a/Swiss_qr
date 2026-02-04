@@ -47,6 +47,9 @@ export default function AdminDashboard() {
       });
       return;
     }
+    if (!confirm("This will overwrite the cloud menu with your local data file. Are you sure?")) {
+      return;
+    }
     setIsSyncing(true);
     const result = await pushLocalMenuToFirestore(firestore);
     setIsSyncing(false);
@@ -54,7 +57,7 @@ export default function AdminDashboard() {
     if (result.success) {
       toast({
         title: "Sync Successful",
-        description: `Uploaded ${result.count} items to India server.`,
+        description: `Uploaded ${result.count} items to the database.`,
         className: "bg-emerald-600 text-white border-b-4 border-zinc-900",
       });
     } else {

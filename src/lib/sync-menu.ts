@@ -17,8 +17,8 @@ export const pushLocalMenuToFirestore = async (db: Firestore) => {
         description: item.description,
         price: Number(item.price),
         category: item.category,
-        image: item.image,
-        available: true,
+        image: item.image || "",
+        available: item.available,
         lastUpdated: new Date()
       });
     });
