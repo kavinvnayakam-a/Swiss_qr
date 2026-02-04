@@ -24,7 +24,8 @@ import {
   X, 
   RefreshCw, 
   Eye, 
-  EyeOff 
+  EyeOff,
+  AlignLeft // Added for description icon
 } from 'lucide-react';
 import { MenuItem } from '@/lib/types';
 
@@ -39,7 +40,6 @@ export default function MenuManager() {
   useEffect(() => {
     if (!firestore) return;
 
-    // Listen for Menu Items
     const unsubItems = onSnapshot(collection(firestore, "menu_items"), (snapshot) => {
       setItems(snapshot.docs.map(doc => ({ 
         id: doc.id, 
@@ -47,27 +47,21 @@ export default function MenuManager() {
       } as MenuItem)));
     });
 
-    // Listen for Global Settings
     const unsubSettings = onSnapshot(doc(firestore, "settings", "menu_config"), (snapshot) => {
       if (snapshot.exists()) {
         setGlobalShowImages(snapshot.data().globalShowImages);
       }
     });
 
-    return () => {
-      unsubItems();
-      unsubSettings();
-    };
+    return () => { unsubItems(); unsubSettings(); };
   }, [firestore]);
 
-  // Master Global Toggle
   const toggleGlobalImages = async () => {
     if (!firestore) return;
     const settingsRef = doc(firestore, "settings", "menu_config");
     await setDoc(settingsRef, { globalShowImages: !globalShowImages }, { merge: true });
   };
 
-  // Individual Image Toggle
   const toggleImageVisibility = async (item: MenuItem) => {
     if (!firestore) return;
     const itemRef = doc(firestore, "menu_items", item.id);
@@ -80,6 +74,12 @@ export default function MenuManager() {
     if (!firestore) return;
     const itemRef = doc(firestore, "menu_items", item.id);
     await updateDoc(itemRef, { available: !item.available });
+  };
+
+  const handleUpdateDescription = async (itemId: string, newDesc: string) => {
+    if (!firestore) return;
+    const itemRef = doc(firestore, "menu_items", itemId);
+    await updateDoc(itemRef, { description: newDesc });
   };
 
   const handleRemoveImage = async (itemId: string) => {
@@ -100,16 +100,11 @@ export default function MenuManager() {
       const imageUrl = await uploadMenuImage(storage, newFile);
       if (imageUrl) {
         const itemRef = doc(firestore, "menu_items", itemId);
-        await updateDoc(itemRef, { 
-          image: imageUrl,
-          showImage: true 
-        });
+        await updateDoc(itemRef, { image: imageUrl, showImage: true });
       }
     } catch (err) {
       console.error("Error updating image:", err);
-    } finally {
-      setIsUploading(false);
-    }
+    } finally { setIsUploading(false); }
   };
 
   const handleAddItem = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -126,7 +121,7 @@ export default function MenuManager() {
         name: formData.get("name"),
         price: Number(formData.get("price")),
         category: formData.get("category"),
-        description: "",
+        description: formData.get("description"), // Saved from form
         image: imageUrl,
         showImage: imageUrl ? true : false,
         available: true,
@@ -136,9 +131,7 @@ export default function MenuManager() {
       (e.target as HTMLFormElement).reset();
     } catch (err) {
       console.error("Error adding item:", err);
-    } finally {
-      setIsUploading(false);
-    }
+    } finally { setIsUploading(false); }
   };
 
   return (
@@ -166,10 +159,13 @@ export default function MenuManager() {
         <h2 className="text-xl font-black uppercase italic mb-6 flex items-center gap-2">
           <Plus className="w-6 h-6" /> Add New Menu Item
         </h2>
-        <form onSubmit={handleAddItem} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        <form onSubmit={handleAddItem} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-end">
           <Input name="name" placeholder="Item Name" required className="border-2 border-stone-800 rounded-xl" />
           <Input name="price" type="number" placeholder="Price (₹)" required className="border-2 border-stone-800 rounded-xl" />
           <Input name="category" placeholder="Category" required className="border-2 border-stone-800 rounded-xl" />
+          
+          {/* DESCRIPTION INPUT FIELD */}
+          <Input name="description" placeholder="Short Description" className="border-2 border-stone-800 rounded-xl" />
           
           <div className="relative">
             <label className="flex items-center justify-center w-full h-10 border-2 border-dashed border-stone-300 rounded-xl cursor-pointer hover:bg-stone-50 transition-all">
@@ -191,6 +187,7 @@ export default function MenuManager() {
           <thead className="bg-stone-800 text-white text-[10px] font-black uppercase tracking-[0.2em]">
             <tr>
               <th className="p-6">Item & Image</th>
+              <th className="p-6">Description</th>
               <th className="p-6">Visibility</th>
               <th className="p-6">Price</th>
               <th className="p-6">Stock Status</th>
@@ -210,39 +207,37 @@ export default function MenuManager() {
                           <ImageIcon size={24} />
                         </div>
                       )}
-
                       <label className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white opacity-0 hover:opacity-100 cursor-pointer transition-opacity z-10">
                         <RefreshCw size={20} className={isUploading ? "animate-spin" : ""} />
                         <span className="text-[8px] font-bold uppercase mt-1">Swap</span>
-                        <input 
-                          type="file" 
-                          className="hidden" 
-                          accept="image/*" 
-                          onChange={(e) => {
-                            const newFile = e.target.files?.[0];
-                            if (newFile) handleUpdateImage(item.id, newFile);
-                          }} 
-                        />
+                        <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                          const newFile = e.target.files?.[0];
+                          if (newFile) handleUpdateImage(item.id, newFile);
+                        }} />
                       </label>
                     </div>
-
                     {item.image && (
-                      <button 
-                        onClick={(e) => { e.preventDefault(); handleRemoveImage(item.id); }}
-                        className="absolute -top-2 -right-2 bg-rose-500 text-white p-1.5 rounded-full border-2 border-white shadow-lg hover:scale-110 active:scale-90 transition-all z-20"
-                      >
+                      <button onClick={(e) => { e.preventDefault(); handleRemoveImage(item.id); }} className="absolute -top-2 -right-2 bg-rose-500 text-white p-1.5 rounded-full border-2 border-white shadow-lg hover:scale-110 transition-all z-20">
                         <X size={12} strokeWidth={3} />
                       </button>
                     )}
                   </div>
-
                   <div>
                     <p className="font-black text-stone-800 uppercase italic leading-tight">{item.name}</p>
                     <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">{item.category}</p>
                   </div>
                 </td>
 
-                {/* VISIBILITY TOGGLE CELL */}
+                {/* EDITABLE DESCRIPTION CELL */}
+                <td className="p-4">
+                  <textarea 
+                    defaultValue={item.description}
+                    onBlur={(e) => handleUpdateDescription(item.id, e.target.value)}
+                    placeholder="Add details..."
+                    className="w-full bg-stone-50 text-[10px] font-bold p-2 rounded-xl border-none focus:ring-2 ring-amber-500 resize-none h-16 outline-none"
+                  />
+                </td>
+
                 <td className="p-4">
                   <button
                     disabled={!item.image}
@@ -263,23 +258,13 @@ export default function MenuManager() {
                 <td className="p-4 font-black text-lg text-stone-800">₹{item.price}</td>
                 
                 <td className="p-4">
-                  <button 
-                    onClick={() => toggleStatus(item)}
-                    className={`px-4 py-2 rounded-full text-[10px] font-black uppercase transition-all border-2 ${
-                      item.available 
-                      ? "bg-emerald-50 border-emerald-500 text-emerald-600" 
-                      : "bg-rose-50 border-rose-500 text-rose-600"
-                    }`}
-                  >
+                  <button onClick={() => toggleStatus(item)} className={`px-4 py-2 rounded-full text-[10px] font-black uppercase transition-all border-2 ${item.available ? "bg-emerald-50 border-emerald-500 text-emerald-600" : "bg-rose-50 border-rose-500 text-rose-600"}`}>
                     {item.available ? "In Stock" : "Sold Out"}
                   </button>
                 </td>
 
                 <td className="p-4 text-right">
-                  <button 
-                    onClick={async () => { if(confirm("Delete item permanently?")) { if (firestore) await deleteDoc(doc(firestore, "menu_items", item.id)) } }}
-                    className="p-3 bg-stone-50 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
-                  >
+                  <button onClick={async () => { if(confirm("Delete item permanently?")) { if (firestore) await deleteDoc(doc(firestore, "menu_items", item.id)) } }} className="p-3 bg-stone-50 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
                     <Trash2 className="h-5 w-5" />
                   </button>
                 </td>

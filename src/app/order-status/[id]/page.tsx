@@ -14,17 +14,11 @@ import {
 } from 'firebase/firestore';
 import { useRouter, useParams } from 'next/navigation';
 import { 
-  Clock, 
-  MessageCircleQuestion, 
   PlusCircle, 
   BellRing, 
   X, 
   Search,
-  ChevronDown,
-  ChevronUp,
-  Loader2,
   Heart,
-  ShoppingBag
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
@@ -34,7 +28,6 @@ export default function OrderStatusPage() {
   const id = params.id as string;
   const firestore = useFirestore();
 
-  // --- LOGIC STATES (Preserved) ---
   const [status, setStatus] = useState('Pending');
   const [orderData, setOrderData] = useState<any>(null);
   const [score, setScore] = useState(0);
@@ -44,79 +37,36 @@ export default function OrderStatusPage() {
   const [showOrderMore, setShowOrderMore] = useState(false);
   const [fullMenu, setFullMenu] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [loadingMenu, setLoadingMenu] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const [timeLeft, setTimeLeft] = useState(180);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const lastStatus = useRef<string>('Pending');
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const lastStatus = useRef<string>('');
 
-  // --- 1. PREVENT REFRESH & DISABLE BACK BUTTON ---
+  // --- 1. NOTIFICATION SOUND SETUP ---
   useEffect(() => {
-    // Disable Back Button
-    window.history.pushState(null, "", window.location.href);
-    const handlePopState = () => {
-      window.history.pushState(null, "", window.location.href);
-    };
-
-    // Prevent Refresh
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "Are you sure? Your order session is active.";
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
+    audioRef.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
   }, []);
 
-  // --- 2. FIREBASE & TIMER LOGICS (Preserved) ---
-  useEffect(() => {
-    if (!firestore) return;
-    const fetchMenu = async () => {
-      setLoadingMenu(true);
-      try {
-        const querySnapshot = await getDocs(collection(firestore, "menu_items"));
-        const items = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setFullMenu(items);
-        const categories = [...new Set(items.map(i => i.category || 'General'))];
-        if (categories.length > 0) setExpandedCategories({ [categories[0]]: true });
-      } finally { setLoadingMenu(false); }
-    };
-    fetchMenu();
-  }, [firestore]);
-
-  useEffect(() => {
-    if (!isTimerRunning || !id) return;
-    const timerKey = `end_timer_${id}`;
-    let savedEndTime = localStorage.getItem(timerKey);
-    if (!savedEndTime) {
-      const newEndTime = (Date.now() + 180000).toString();
-      localStorage.setItem(timerKey, newEndTime);
-      savedEndTime = newEndTime;
-    }
-    const interval = setInterval(() => {
-      const remaining = Math.max(0, Math.floor((parseInt(savedEndTime!) - Date.now()) / 1000));
-      setTimeLeft(remaining);
-      if (remaining <= 0) {
-        clearInterval(interval);
-        localStorage.removeItem(timerKey);
-        router.push('/thanks'); 
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isTimerRunning, id, router]);
-
+  // --- 2. FIREBASE & STATUS MONITORING ---
   useEffect(() => {
     if (!id || !firestore) return;
     const unsub = onSnapshot(doc(firestore, "orders", id), (docSnapshot) => {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
-        if (data.status === 'Served' && !isTimerRunning) setIsTimerRunning(true);
+        
+        // Play notification if status changed
+        if (lastStatus.current && lastStatus.current !== data.status) {
+          audioRef.current?.play().catch(() => {});
+        }
+        lastStatus.current = data.status;
+
+        // Trigger 3-min timer when Served
+        if (data.status === 'Served' && !isTimerRunning) {
+          setIsTimerRunning(true);
+        }
+        
         setStatus(data.status);
         setOrderData(data);
       }
@@ -124,7 +74,32 @@ export default function OrderStatusPage() {
     return () => unsub();
   }, [id, firestore, isTimerRunning]);
 
-  // --- 3. PASTRY RAIN GAME LOGIC ---
+  // --- 3. THE 3-MINUTE SERVED TIMER ---
+  useEffect(() => {
+    if (!isTimerRunning || !id) return;
+    const timerKey = `expiry_${id}`;
+    let expiryTime = localStorage.getItem(timerKey);
+    
+    if (!expiryTime) {
+      expiryTime = (Date.now() + 180000).toString(); // 180 seconds
+      localStorage.setItem(timerKey, expiryTime);
+    }
+
+    const interval = setInterval(() => {
+      const remaining = Math.max(0, Math.floor((parseInt(expiryTime!) - Date.now()) / 1000));
+      setTimeLeft(remaining);
+      
+      if (remaining <= 0) {
+        clearInterval(interval);
+        localStorage.removeItem(timerKey);
+        router.push('/thanks'); 
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isTimerRunning, id, router]);
+
+  // --- 4. BRIGHT PASTRY RAIN GAME ---
   useEffect(() => {
     if (!gameActive || !canvasRef.current) return;
     const canvas = canvasRef.current;
@@ -134,6 +109,7 @@ export default function OrderStatusPage() {
 
     let basketX = canvas.width / 2;
     const pastries: any[] = [];
+    // Brighter collection of pastry emojis
     const emojis = ["🥐", "🧁", "🥨", "🍩", "🍪"];
     let frame = 0;
     let animationId: number;
@@ -141,31 +117,34 @@ export default function OrderStatusPage() {
     const gameLoop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw Basket
-      ctx.font = "50px serif";
+      // Draw Basket (Brighter styling)
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = "rgba(0,0,0,0.1)";
+      ctx.font = "60px serif";
       ctx.textAlign = "center";
       ctx.fillText("🧺", basketX, canvas.height - 100);
 
-      if (frame % 40 === 0) {
+      if (frame % 35 === 0) {
         pastries.push({ 
           x: Math.random() * (canvas.width - 60) + 30, 
           y: -50, 
           emoji: emojis[Math.floor(Math.random() * emojis.length)],
-          speed: 4 + Math.random() * 3 
+          speed: 5 + Math.random() * 4 
         });
       }
 
       pastries.forEach((p, i) => {
         p.y += p.speed;
-        ctx.font = "40px serif";
+        // Brighter/Larger items
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "rgba(183, 53, 56, 0.3)";
+        ctx.font = "50px serif";
         ctx.fillText(p.emoji, p.x, p.y);
 
-        // Catch check
-        if (p.y > canvas.height - 130 && p.y < canvas.height - 80 && Math.abs(p.x - basketX) < 50) {
+        if (p.y > canvas.height - 140 && p.y < canvas.height - 70 && Math.abs(p.x - basketX) < 60) {
           setScore(s => s + 1);
           pastries.splice(i, 1);
         }
-        // Miss check
         if (p.y > canvas.height) {
           setGameActive(false);
           setIsGameOver(true);
@@ -191,24 +170,31 @@ export default function OrderStatusPage() {
     };
   }, [gameActive]);
 
-  // --- 4. ACTION HANDLERS (Preserved) ---
+  // --- MENU FETCHING & ACTION HANDLERS ---
+  useEffect(() => {
+    if (!firestore) return;
+    const fetchMenu = async () => {
+      const querySnapshot = await getDocs(collection(firestore, "menu_items"));
+      setFullMenu(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    };
+    fetchMenu();
+  }, [firestore]);
+
   const addMoreFood = async (item: any) => {
     if (!firestore) return;
-    try {
-      await updateDoc(doc(firestore, "orders", id), {
-        items: arrayUnion({ name: item.name, quantity: 1, price: item.price, status: "Pending", addedAt: new Date().toISOString() }),
-        totalPrice: increment(item.price),
-        status: "Pending" 
-      });
-      setShowOrderMore(false);
-    } catch (err) { console.error(err); }
+    await updateDoc(doc(firestore, "orders", id), {
+      items: arrayUnion({ name: item.name, quantity: 1, price: item.price, status: "Pending", addedAt: new Date().toISOString() }),
+      totalPrice: increment(item.price),
+      status: "Pending" 
+    });
+    setShowOrderMore(false);
   };
 
   const requestHelp = async () => {
-    if (helpLoading || orderData?.helpRequested || !firestore) return;
+    if (helpLoading || !firestore) return;
     setHelpLoading(true);
-    try { await updateDoc(doc(firestore, "orders", id), { helpRequested: true, helpRequestedAt: serverTimestamp() }); } 
-    finally { setHelpLoading(false); }
+    await updateDoc(doc(firestore, "orders", id), { helpRequested: true, helpRequestedAt: serverTimestamp() });
+    setHelpLoading(false);
   };
 
   const groupedMenu = fullMenu.reduce((acc: Record<string, any[]>, item) => {
@@ -220,46 +206,54 @@ export default function OrderStatusPage() {
 
   return (
     <div className="fixed inset-0 bg-[#FDFDFD] font-sans overflow-hidden select-none">
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-40" />
+      {/* GAME CANVAS - Opacity set to 1 for brightness, Z-index lowered but colors enhanced */}
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full z-10 opacity-100" />
 
-      {/* HEADER: WHITE GLOSS PILL */}
+      {/* 3-MINUTE TIMER OVERLAY (Only visible when Served) */}
+      {isTimerRunning && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[60] bg-slate-900 text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl scale-90">
+          <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Redirecting in:</span>
+          <span className="font-mono font-bold text-[#facc15]">
+            {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+          </span>
+        </div>
+      )}
+
+      {/* HEADER */}
       <div className={cn(
-        "absolute top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 transition-all duration-700",
+        "absolute top-16 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 transition-all duration-700",
         gameActive ? "-translate-y-40 opacity-0" : "translate-y-0 opacity-100"
       )}>
-        <div className="bg-white/70 backdrop-blur-xl border border-white p-6 rounded-[2.5rem] shadow-xl shadow-black/5 flex flex-col gap-4">
+        <div className="bg-white/80 backdrop-blur-xl border border-white p-6 rounded-[2.5rem] shadow-xl shadow-black/5 flex flex-col gap-4">
           <div className="flex justify-between items-center px-1">
             <span className="text-[10px] font-black uppercase tracking-widest text-[#b73538]">Order #{orderData?.orderNumber}</span>
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Tbl {orderData?.tableId}</span>
           </div>
-          
           <div className="relative h-4 w-full bg-slate-100 rounded-full overflow-hidden">
             <div 
               className="h-full bg-[#b73538] transition-all duration-1000"
               style={{ width: status === 'Pending' ? '30%' : status === 'Served' ? '100%' : '65%' }}
             />
           </div>
-          
           <div className="flex items-center justify-center gap-2">
-            <span className="text-xs font-bold text-slate-800 uppercase tracking-tighter">
-              {status === 'Pending' ? 'Wait Approval' : status === 'Served' ? 'Order Served' : 'Baking Delights'}
+            <span className="text-xs font-bold text-slate-800 uppercase">
+              {status === 'Pending' ? 'Wait Approval' : status === 'Served' ? 'Enjoy your Food!' : 'Baking Delights'}
             </span>
             <Heart size={14} className="text-[#b73538] fill-[#b73538] animate-pulse" />
           </div>
         </div>
       </div>
 
-      {/* BOTTOM ACTIONS: BRAND RED */}
+      {/* BOTTOM ACTIONS */}
       {!gameActive && (
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 flex gap-4">
-          <button onClick={() => setShowOrderMore(true)} className="flex-1 bg-white h-16 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-black/5 border border-slate-100 active:scale-95 transition-all">
+          <button onClick={() => setShowOrderMore(true)} className="flex-1 bg-white h-16 rounded-2xl flex items-center justify-center gap-2 shadow-xl border border-slate-100">
             <PlusCircle size={20} className="text-[#b73538]" />
             <span className="text-[11px] font-black uppercase tracking-widest">Order More</span>
           </button>
-          
           <button onClick={requestHelp} className={cn(
-            "flex-1 h-16 rounded-2xl flex items-center justify-center gap-2 shadow-xl transition-all active:scale-95",
-            orderData?.helpRequested ? 'bg-emerald-500 text-white' : 'bg-[#b73538] text-white shadow-red-900/10'
+            "flex-1 h-16 rounded-2xl flex items-center justify-center gap-2 shadow-xl transition-all",
+            orderData?.helpRequested ? 'bg-emerald-500 text-white' : 'bg-[#b73538] text-white'
           )}>
             <BellRing size={20} />
             <span className="text-[11px] font-black uppercase tracking-widest">{orderData?.helpRequested ? 'Coming!' : 'Help'}</span>
@@ -267,18 +261,18 @@ export default function OrderStatusPage() {
         </div>
       )}
 
-      {/* GAME OVERLAYS */}
+      {/* GAME OVERLAY */}
       {!gameActive && !showOrderMore && (
-        <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-[#FDFDFD]/60 backdrop-blur-sm p-8">
-          <div className="bg-white p-10 rounded-[4rem] shadow-2xl shadow-black/5 text-center space-y-8 max-w-sm border border-slate-50">
+        <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-[#FDFDFD]/40 backdrop-blur-sm p-8">
+          <div className="bg-white p-10 rounded-[4rem] shadow-2xl text-center space-y-8 max-w-sm border border-slate-50">
             <div className="text-7xl">{isGameOver ? "🥣" : "🥐"}</div>
             <div className="space-y-2">
               <h2 className="text-2xl font-serif italic text-slate-800">Pastry Catch</h2>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Don't let them touch the ground!</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Catch them in the basket!</p>
             </div>
             <button 
               onClick={() => { setScore(0); setGameActive(true); setIsGameOver(false); }} 
-              className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl active:scale-95 transition-all"
+              className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl"
             >
               {isGameOver ? "Play Again" : "Start Game"}
             </button>
@@ -288,13 +282,12 @@ export default function OrderStatusPage() {
 
       {/* GAME SCORE */}
       {gameActive && (
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
-          <span className="text-7xl font-serif italic text-[#b73538] opacity-80">{score}</span>
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Caught</span>
+        <div className="absolute top-24 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center pointer-events-none">
+          <span className="text-8xl font-serif italic text-[#b73538] drop-shadow-lg">{score}</span>
         </div>
       )}
 
-      {/* ADD MORE POPUP (Boutique Theme) */}
+      {/* ORDER MORE POPUP */}
       {showOrderMore && (
         <div className="absolute inset-0 z-[100] bg-black/40 backdrop-blur-sm flex items-end">
           <div className="w-full bg-[#FDFDFD] rounded-t-[3rem] p-8 border-t border-slate-100 max-h-[85vh] flex flex-col">
@@ -306,12 +299,12 @@ export default function OrderStatusPage() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
               <input type="text" placeholder="Search menu..." className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl text-sm outline-none" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
-            <div className="flex-1 overflow-y-auto space-y-6 pb-10 no-scrollbar">
+            <div className="flex-1 overflow-y-auto space-y-6 pb-10">
               {Object.keys(groupedMenu).map((cat) => (
                 <div key={cat} className="space-y-3">
                   <p className="text-[10px] font-black uppercase text-[#b73538] tracking-widest">{cat}</p>
                   {groupedMenu[cat].map((item: any) => (
-                    <button key={item.id} onClick={() => addMoreFood(item)} className="w-full flex justify-between items-center p-5 bg-white border border-slate-50 rounded-2xl shadow-sm hover:ring-1 ring-[#b73538] transition-all">
+                    <button key={item.id} onClick={() => addMoreFood(item)} className="w-full flex justify-between items-center p-5 bg-white border border-slate-50 rounded-2xl shadow-sm">
                       <span className="text-sm font-bold text-slate-700">{item.name}</span>
                       <span className="text-xs font-black text-slate-400">₹{item.price}</span>
                     </button>
